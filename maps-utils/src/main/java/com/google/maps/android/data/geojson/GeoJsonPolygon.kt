@@ -23,7 +23,7 @@ import com.google.maps.android.model.LatLng
  * The first array is the polygon exterior boundary. Subsequent arrays are holes.
  */
 class GeoJsonPolygon(
-    coordinates: List<List<LatLng>>
+    coordinates: List<List<LatLng>>,
 ) : DataPolygon<Any?> {
     /**
      * Gets a list of a list of coordinates of the GeoJsonPolygons

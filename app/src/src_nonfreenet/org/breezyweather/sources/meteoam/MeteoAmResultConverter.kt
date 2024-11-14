@@ -38,7 +38,7 @@ import java.util.Date
 fun convert(
     location: Location,
     reverseLocation: MeteoAmReverseLocation,
-    timezone: String
+    timezone: String,
 ): Location {
     return location.copy(
         timeZone = timezone,
@@ -52,7 +52,7 @@ fun convert(
 fun convert(
     context: Context,
     forecastResult: MeteoAmForecastResult,
-    observationResult: MeteoAmObservationResult
+    observationResult: MeteoAmObservationResult,
 ): WeatherWrapper {
     val timeseries = forecastResult.timeseries
     val params = forecastResult.paramlist
@@ -68,7 +68,9 @@ fun convert(
     return WeatherWrapper(
         current = if (observation != null) {
             getCurrent(context, oParams, observation)
-        } else null,
+        } else {
+            null
+        },
         dailyForecast = getDailyForecast(context, stats),
         hourlyForecast = getHourlyForecast(context, timeseries, params, data)
     )
@@ -77,7 +79,7 @@ fun convert(
 private fun getCurrent(
     context: Context,
     params: List<String>,
-    currentResult: Map<String, Map<String, Any?>>
+    currentResult: Map<String, Map<String, Any?>>,
 ): Current {
     val keys = mutableMapOf<String, String>()
     for (i in params.indices) {
@@ -123,7 +125,7 @@ private fun getCurrent(
 
 private fun getDailyForecast(
     context: Context,
-    dailyResult: List<MeteoAmForecastStats>
+    dailyResult: List<MeteoAmForecastStats>,
 ): List<Daily> {
     val dailyForecast = mutableListOf<Daily>()
     dailyResult.forEach {
@@ -150,7 +152,7 @@ private fun getHourlyForecast(
     context: Context,
     timeseries: List<Date>,
     params: List<String>,
-    data: Map<String, Map<String, Any?>>
+    data: Map<String, Map<String, Any?>>,
 ): List<HourlyWrapper> {
     val hourlyForecast = mutableListOf<HourlyWrapper>()
     val keys = mutableMapOf<String, String>()

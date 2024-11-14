@@ -53,13 +53,23 @@ import java.util.Date
 object ClockDayVerticalWidgetIMP : AbstractRemoteViewsPresenter() {
 
     fun updateWidgetView(
-        context: Context, location: Location?, pollenIndexSource: PollenIndexSource?
+        context: Context,
+        location: Location?,
+        pollenIndexSource: PollenIndexSource?,
     ) {
         val config = getWidgetConfig(context, context.getString(R.string.sp_widget_clock_day_vertical_setting))
         val views = getRemoteViews(
-            context, location,
-            config.viewStyle, config.cardStyle, config.cardAlpha, config.textColor, config.textSize,
-            config.hideSubtitle, config.subtitleData, config.clockFont, pollenIndexSource
+            context,
+            location,
+            config.viewStyle,
+            config.cardStyle,
+            config.cardAlpha,
+            config.textColor,
+            config.textSize,
+            config.hideSubtitle,
+            config.subtitleData,
+            config.clockFont,
+            pollenIndexSource
         )
         AppWidgetManager.getInstance(context).updateAppWidget(
             ComponentName(context, WidgetClockDayVerticalProvider::class.java),
@@ -68,10 +78,17 @@ object ClockDayVerticalWidgetIMP : AbstractRemoteViewsPresenter() {
     }
 
     fun getRemoteViews(
-        context: Context, location: Location?,
-        viewStyle: String?, cardStyle: String?, cardAlpha: Int, textColor: String?, textSize: Int,
-        hideSubtitle: Boolean, subtitleData: String?, clockFont: String?,
-        pollenIndexSource: PollenIndexSource?
+        context: Context,
+        location: Location?,
+        viewStyle: String?,
+        cardStyle: String?,
+        cardAlpha: Int,
+        textColor: String?,
+        textSize: Int,
+        hideSubtitle: Boolean,
+        subtitleData: String?,
+        clockFont: String?,
+        pollenIndexSource: PollenIndexSource?,
     ): RemoteViews {
         val color = WidgetColor(context, cardStyle!!, textColor!!, location?.isDaylight ?: true)
         val settings = SettingsManager.getInstance(context)
@@ -79,8 +96,17 @@ object ClockDayVerticalWidgetIMP : AbstractRemoteViewsPresenter() {
         val speedUnit = settings.speedUnit
         val minimalIcon = settings.isWidgetUsingMonochromeIcons
         val views = buildWidgetViewDayPart(
-            context, location, temperatureUnit, speedUnit,
-            color, textSize, minimalIcon, clockFont, viewStyle, hideSubtitle, subtitleData,
+            context,
+            location,
+            temperatureUnit,
+            speedUnit,
+            color,
+            textSize,
+            minimalIcon,
+            clockFont,
+            viewStyle,
+            hideSubtitle,
+            subtitleData,
             pollenIndexSource
         )
         if (color.showCard) {
@@ -92,10 +118,18 @@ object ClockDayVerticalWidgetIMP : AbstractRemoteViewsPresenter() {
     }
 
     private fun buildWidgetViewDayPart(
-        context: Context, location: Location?, temperatureUnit: TemperatureUnit, speedUnit: SpeedUnit,
-        color: WidgetColor, textSize: Int, minimalIcon: Boolean,
-        clockFont: String?, viewStyle: String?, hideSubtitle: Boolean, subtitleData: String?,
-        pollenIndexSource: PollenIndexSource?
+        context: Context,
+        location: Location?,
+        temperatureUnit: TemperatureUnit,
+        speedUnit: SpeedUnit,
+        color: WidgetColor,
+        textSize: Int,
+        minimalIcon: Boolean,
+        clockFont: String?,
+        viewStyle: String?,
+        hideSubtitle: Boolean,
+        subtitleData: String?,
+        pollenIndexSource: PollenIndexSource?,
     ): RemoteViews {
         val views = RemoteViews(
             context.packageName,
@@ -217,7 +251,11 @@ object ClockDayVerticalWidgetIMP : AbstractRemoteViewsPresenter() {
             views.setImageViewUri(
                 R.id.widget_clock_day_icon,
                 ResourceHelper.getWidgetNotificationIconUri(
-                    provider, it, location.isDaylight, minimalIcon, color.minimalIconColor
+                    provider,
+                    it,
+                    location.isDaylight,
+                    minimalIcon,
+                    color.minimalIconColor
                 )
             )
         } ?: views.setViewVisibility(R.id.widget_clock_day_icon, View.INVISIBLE)
@@ -325,19 +363,29 @@ object ClockDayVerticalWidgetIMP : AbstractRemoteViewsPresenter() {
                         R.id.widget_clock_day_clock_analogContainer_auto,
                         if (color.backgroundType == WidgetColor.WidgetBackgroundType.AUTO) {
                             View.VISIBLE
-                        } else View.GONE
+                        } else {
+                            View.GONE
+                        }
                     )
                     setViewVisibility(
                         R.id.widget_clock_day_clock_analogContainer_light,
                         if (color.backgroundType == WidgetColor.WidgetBackgroundType.AUTO) {
                             View.GONE
-                        } else if (color.textType == NotificationTextColor.DARK) View.GONE else View.VISIBLE
+                        } else if (color.textType == NotificationTextColor.DARK) {
+                            View.GONE
+                        } else {
+                            View.VISIBLE
+                        }
                     )
                     setViewVisibility(
                         R.id.widget_clock_day_clock_analogContainer_dark,
                         if (color.backgroundType == WidgetColor.WidgetBackgroundType.AUTO) {
                             View.GONE
-                        } else if (color.textType == NotificationTextColor.DARK) View.VISIBLE else View.GONE
+                        } else if (color.textType == NotificationTextColor.DARK) {
+                            View.VISIBLE
+                        } else {
+                            View.GONE
+                        }
                     )
                 }
             }
@@ -362,7 +410,10 @@ object ClockDayVerticalWidgetIMP : AbstractRemoteViewsPresenter() {
     }
 
     private fun getTitleText(
-        context: Context, location: Location, viewStyle: String?, unit: TemperatureUnit
+        context: Context,
+        location: Location,
+        viewStyle: String?,
+        unit: TemperatureUnit,
     ): String? {
         val weather = location.weather ?: return null
         return when (viewStyle) {
@@ -453,7 +504,9 @@ object ClockDayVerticalWidgetIMP : AbstractRemoteViewsPresenter() {
                         + " ("
                         + airQuality.getIndex()
                         + ")")
-                } else null
+                } else {
+                    null
+                }
             }
             "wind" -> weather.current?.wind?.getShortDescription(context, speedUnit)
             "lunar" -> when (viewStyle) {
@@ -509,74 +562,52 @@ object ClockDayVerticalWidgetIMP : AbstractRemoteViewsPresenter() {
         // weather.
         views.setOnClickPendingIntent(
             R.id.widget_clock_day_weather,
-            getWeatherPendingIntent(
-                context, location, Widgets.CLOCK_DAY_VERTICAL_PENDING_INTENT_CODE_WEATHER
-            )
+            getWeatherPendingIntent(context, location, Widgets.CLOCK_DAY_VERTICAL_PENDING_INTENT_CODE_WEATHER)
         )
 
         // clock.
         views.setOnClickPendingIntent(
             R.id.widget_clock_day_clock_light,
-            getAlarmPendingIntent(
-                context, Widgets.CLOCK_DAY_VERTICAL_PENDING_INTENT_CODE_CLOCK_LIGHT
-            )
+            getAlarmPendingIntent(context, Widgets.CLOCK_DAY_VERTICAL_PENDING_INTENT_CODE_CLOCK_LIGHT)
         )
         views.setOnClickPendingIntent(
             R.id.widget_clock_day_clock_normal,
-            getAlarmPendingIntent(
-                context, Widgets.CLOCK_DAY_VERTICAL_PENDING_INTENT_CODE_CLOCK_NORMAL
-            )
+            getAlarmPendingIntent(context, Widgets.CLOCK_DAY_VERTICAL_PENDING_INTENT_CODE_CLOCK_NORMAL)
         )
         views.setOnClickPendingIntent(
             R.id.widget_clock_day_clock_black,
-            getAlarmPendingIntent(
-                context, Widgets.CLOCK_DAY_VERTICAL_PENDING_INTENT_CODE_CLOCK_BLACK
-            )
+            getAlarmPendingIntent(context, Widgets.CLOCK_DAY_VERTICAL_PENDING_INTENT_CODE_CLOCK_BLACK)
         )
         views.setOnClickPendingIntent(
             R.id.widget_clock_day_clock_1_light,
-            getAlarmPendingIntent(
-                context, Widgets.CLOCK_DAY_VERTICAL_PENDING_INTENT_CODE_CLOCK_1_LIGHT
-            )
+            getAlarmPendingIntent(context, Widgets.CLOCK_DAY_VERTICAL_PENDING_INTENT_CODE_CLOCK_1_LIGHT)
         )
         views.setOnClickPendingIntent(
             R.id.widget_clock_day_clock_1_normal,
-            getAlarmPendingIntent(
-                context, Widgets.CLOCK_DAY_VERTICAL_PENDING_INTENT_CODE_CLOCK_1_NORMAL
-            )
+            getAlarmPendingIntent(context, Widgets.CLOCK_DAY_VERTICAL_PENDING_INTENT_CODE_CLOCK_1_NORMAL)
         )
         views.setOnClickPendingIntent(
             R.id.widget_clock_day_clock_1_black,
-            getAlarmPendingIntent(
-                context, Widgets.CLOCK_DAY_VERTICAL_PENDING_INTENT_CODE_CLOCK_1_BLACK
-            )
+            getAlarmPendingIntent(context, Widgets.CLOCK_DAY_VERTICAL_PENDING_INTENT_CODE_CLOCK_1_BLACK)
         )
         views.setOnClickPendingIntent(
             R.id.widget_clock_day_clock_2_light,
-            getAlarmPendingIntent(
-                context, Widgets.CLOCK_DAY_VERTICAL_PENDING_INTENT_CODE_CLOCK_2_LIGHT
-            )
+            getAlarmPendingIntent(context, Widgets.CLOCK_DAY_VERTICAL_PENDING_INTENT_CODE_CLOCK_2_LIGHT)
         )
         views.setOnClickPendingIntent(
             R.id.widget_clock_day_clock_2_normal,
-            getAlarmPendingIntent(
-                context, Widgets.CLOCK_DAY_VERTICAL_PENDING_INTENT_CODE_CLOCK_2_NORMAL
-            )
+            getAlarmPendingIntent(context, Widgets.CLOCK_DAY_VERTICAL_PENDING_INTENT_CODE_CLOCK_2_NORMAL)
         )
         views.setOnClickPendingIntent(
             R.id.widget_clock_day_clock_2_black,
-            getAlarmPendingIntent(
-                context, Widgets.CLOCK_DAY_VERTICAL_PENDING_INTENT_CODE_CLOCK_2_BLACK
-            )
+            getAlarmPendingIntent(context, Widgets.CLOCK_DAY_VERTICAL_PENDING_INTENT_CODE_CLOCK_2_BLACK)
         )
 
         // time.
         if (subtitleData == "lunar") {
             views.setOnClickPendingIntent(
                 R.id.widget_clock_day_time,
-                getCalendarPendingIntent(
-                    context, Widgets.DAY_PENDING_INTENT_CODE_CALENDAR
-                )
+                getCalendarPendingIntent(context, Widgets.DAY_PENDING_INTENT_CODE_CALENDAR)
             )
         }
     }

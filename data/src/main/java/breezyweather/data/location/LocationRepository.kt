@@ -243,5 +243,4 @@ class LocationRepository(
             locationsQueries.deleteLocation(formattedId)
         }
     }
-
 }

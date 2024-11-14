@@ -27,7 +27,7 @@ import kotlin.math.pow
 data class Minutely(
     val date: Date,
     val minuteInterval: Int,
-    val precipitationIntensity: Double? = null
+    val precipitationIntensity: Double? = null,
 ) : Serializable {
 
     val dbz: Int?

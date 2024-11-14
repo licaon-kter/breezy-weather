@@ -31,5 +31,5 @@ data class Base(
     val pollenUpdateTime: Date? = null,
     val minutelyUpdateTime: Date? = null,
     val alertsUpdateTime: Date? = null,
-    val normalsUpdateTime: Date? = null
+    val normalsUpdateTime: Date? = null,
 ) : Serializable

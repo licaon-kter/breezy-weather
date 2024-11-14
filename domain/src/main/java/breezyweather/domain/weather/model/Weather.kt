@@ -30,7 +30,7 @@ data class Weather(
     val dailyForecast: List<Daily> = emptyList(),
     val hourlyForecast: List<Hourly> = emptyList(),
     val minutelyForecast: List<Minutely> = emptyList(),
-    val alertList: List<Alert> = emptyList()
+    val alertList: List<Alert> = emptyList(),
 ) : Serializable {
 
     // Only hourly in the future, starting from current hour
@@ -51,7 +51,9 @@ data class Weather(
 
     val dailyForecastStartingToday = if (todayIndex >= 0) {
         dailyForecast.subList(todayIndex, dailyForecast.size)
-    } else emptyList()
+    } else {
+        emptyList()
+    }
 
     fun isValid(pollingIntervalHours: Float?): Boolean {
         val updateTime = base.refreshTime?.time ?: 0

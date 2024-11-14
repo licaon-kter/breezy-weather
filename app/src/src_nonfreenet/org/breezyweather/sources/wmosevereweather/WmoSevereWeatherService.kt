@@ -35,7 +35,7 @@ import javax.inject.Named
  */
 class WmoSevereWeatherService @Inject constructor(
     @Named("JsonClient") jsonClient: Retrofit.Builder,
-    @Named("XmlClient") xmlClient: Retrofit.Builder
+    @Named("XmlClient") xmlClient: Retrofit.Builder,
 ) : HttpSource(), SecondaryWeatherSource {
 
     override val id = "wmosevereweather"
@@ -65,8 +65,9 @@ class WmoSevereWeatherService @Inject constructor(
     override val normalsAttribution = null
 
     override fun requestSecondaryWeather(
-        context: Context, location: Location,
-        requestedFeatures: List<SecondaryWeatherSourceFeature>
+        context: Context,
+        location: Location,
+        requestedFeatures: List<SecondaryWeatherSourceFeature>,
     ): Observable<SecondaryWeatherWrapper> {
         return mAlertsJsonApi.getAlerts(
             typeName = "local_postgis:postgis_geojsons",

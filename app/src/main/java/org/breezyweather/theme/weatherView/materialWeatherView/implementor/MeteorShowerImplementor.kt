@@ -34,7 +34,7 @@ import kotlin.time.Duration.Companion.seconds
  */
 class MeteorShowerImplementor(
     @Size(2) canvasSizes: IntArray,
-    animate: Boolean
+    animate: Boolean,
 ) : WeatherAnimationImplementor() {
     private val mAnimate = animate
     private val mPaint = Paint().apply {
@@ -50,7 +50,7 @@ class MeteorShowerImplementor(
         private val mViewWidth: Int,
         private val mViewHeight: Int,
         @ColorInt val color: Int,
-        val scale: Float
+        val scale: Float,
     ) {
         var x = 0f
         var y = 0f
@@ -119,9 +119,11 @@ class MeteorShowerImplementor(
     }
 
     private class Star(
-        var centerX: Float, var centerY: Float, radius: Float,
+        var centerX: Float,
+        var centerY: Float,
+        radius: Float,
         @field:ColorInt @param:ColorInt var color: Int,
-        var duration: Long
+        var duration: Long,
     ) {
         var radius: Float
         var alpha = 0f
@@ -170,8 +172,7 @@ class MeteorShowerImplementor(
                 colors[random.nextInt(colors.size)], random.nextFloat()
             )
         }
-        val canvasSize =
-            (viewWidth.toDouble().pow(2.0) + viewHeight.toDouble().pow(2.0)).pow(0.5).toInt()
+        val canvasSize = (viewWidth.toDouble().pow(2.0) + viewHeight.toDouble().pow(2.0)).pow(0.5).toInt()
         val width = (1.0 * canvasSize).toInt()
         val height = ((canvasSize - viewHeight) * 0.5 + viewWidth * 1.1111).toInt()
         val radius = (0.00125 * canvasSize * (0.5 + random.nextFloat())).toFloat()
@@ -191,8 +192,10 @@ class MeteorShowerImplementor(
     }
 
     override fun updateData(
-        @Size(2) canvasSizes: IntArray, interval: Long,
-        rotation2D: Float, rotation3D: Float
+        @Size(2) canvasSizes: IntArray,
+        interval: Long,
+        rotation2D: Float,
+        rotation3D: Float,
     ) {
         for (m in mMeteors) {
             m.update(
@@ -207,8 +210,11 @@ class MeteorShowerImplementor(
     }
 
     override fun draw(
-        @Size(2) canvasSizes: IntArray, canvas: Canvas,
-        scrollRate: Float, rotation2D: Float, rotation3D: Float
+        @Size(2) canvasSizes: IntArray,
+        canvas: Canvas,
+        scrollRate: Float,
+        rotation2D: Float,
+        rotation3D: Float,
     ) {
         if (scrollRate < 1) {
             canvas.rotate(

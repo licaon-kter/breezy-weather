@@ -52,13 +52,22 @@ import java.util.Date
 object DayWeekWidgetIMP : AbstractRemoteViewsPresenter() {
 
     fun updateWidgetView(
-        context: Context, location: Location?, pollenIndexSource: PollenIndexSource?
+        context: Context,
+        location: Location?,
+        pollenIndexSource: PollenIndexSource?,
     ) {
         val config = getWidgetConfig(context, context.getString(R.string.sp_widget_day_week_setting))
         val views = getRemoteViews(
-            context, location,
-            config.viewStyle, config.cardStyle, config.cardAlpha, config.textColor,
-            config.textSize, config.hideSubtitle, config.subtitleData, pollenIndexSource
+            context,
+            location,
+            config.viewStyle,
+            config.cardStyle,
+            config.cardAlpha,
+            config.textColor,
+            config.textSize,
+            config.hideSubtitle,
+            config.subtitleData,
+            pollenIndexSource
         )
         AppWidgetManager.getInstance(context).updateAppWidget(
             ComponentName(context, WidgetDayWeekProvider::class.java),
@@ -67,10 +76,16 @@ object DayWeekWidgetIMP : AbstractRemoteViewsPresenter() {
     }
 
     fun getRemoteViews(
-        context: Context, location: Location?,
-        viewStyle: String?, cardStyle: String?, cardAlpha: Int,
-        textColor: String?, textSize: Int, hideSubtitle: Boolean, subtitleData: String?,
-        pollenIndexSource: PollenIndexSource?
+        context: Context,
+        location: Location?,
+        viewStyle: String?,
+        cardStyle: String?,
+        cardAlpha: Int,
+        textColor: String?,
+        textSize: Int,
+        hideSubtitle: Boolean,
+        subtitleData: String?,
+        pollenIndexSource: PollenIndexSource?,
     ): RemoteViews {
         val provider = ResourcesProviderFactory.newInstance
         val settings = SettingsManager.getInstance(context)
@@ -180,11 +195,18 @@ object DayWeekWidgetIMP : AbstractRemoteViewsPresenter() {
     }
 
     private fun buildWidgetViewDayPart(
-        context: Context, helper: ResourceProvider, location: Location?,
-        temperatureUnit: TemperatureUnit, speedUnit: SpeedUnit,
-        color: WidgetColor, textSize: Int, minimalIcon: Boolean,
-        viewStyle: String?, hideSubtitle: Boolean, subtitleData: String?,
-        pollenIndexSource: PollenIndexSource?
+        context: Context,
+        helper: ResourceProvider,
+        location: Location?,
+        temperatureUnit: TemperatureUnit,
+        speedUnit: SpeedUnit,
+        color: WidgetColor,
+        textSize: Int,
+        minimalIcon: Boolean,
+        viewStyle: String?,
+        hideSubtitle: Boolean,
+        subtitleData: String?,
+        pollenIndexSource: PollenIndexSource?,
     ): RemoteViews {
         val views = RemoteViews(
             context.packageName,
@@ -279,7 +301,10 @@ object DayWeekWidgetIMP : AbstractRemoteViewsPresenter() {
     }
 
     private fun getSubtitleText(
-        context: Context, weather: Weather, viewStyle: String?, unit: TemperatureUnit
+        context: Context,
+        weather: Weather,
+        viewStyle: String?,
+        unit: TemperatureUnit,
     ): String? {
         return when (viewStyle) {
             "rectangle" -> Widgets.buildWidgetDayStyleText(context, weather, unit)[1]
@@ -332,7 +357,9 @@ object DayWeekWidgetIMP : AbstractRemoteViewsPresenter() {
                         + " ("
                         + airQuality.getIndex()
                         + ")")
-                } else null
+                } else {
+                    null
+                }
             }
             "wind" -> weather.current?.wind?.getShortDescription(context, speedUnit)
             "lunar" -> when (viewStyle) {
@@ -367,9 +394,7 @@ object DayWeekWidgetIMP : AbstractRemoteViewsPresenter() {
         // weather.
         views.setOnClickPendingIntent(
             R.id.widget_day_week_weather,
-            getWeatherPendingIntent(
-                context, location, Widgets.DAY_WEEK_PENDING_INTENT_CODE_WEATHER
-            )
+            getWeatherPendingIntent(context, location, Widgets.DAY_WEEK_PENDING_INTENT_CODE_WEATHER)
         )
 
         // daily forecast.
@@ -377,31 +402,46 @@ object DayWeekWidgetIMP : AbstractRemoteViewsPresenter() {
         views.setOnClickPendingIntent(
             R.id.widget_day_week_icon_1,
             getDailyForecastPendingIntent(
-                context, location, index, Widgets.DAY_WEEK_PENDING_INTENT_CODE_DAILY_FORECAST_1
+                context,
+                location,
+                index,
+                Widgets.DAY_WEEK_PENDING_INTENT_CODE_DAILY_FORECAST_1
             )
         )
         views.setOnClickPendingIntent(
             R.id.widget_day_week_icon_2,
             getDailyForecastPendingIntent(
-                context, location, index + 1, Widgets.DAY_WEEK_PENDING_INTENT_CODE_DAILY_FORECAST_2
+                context,
+                location,
+                index + 1,
+                Widgets.DAY_WEEK_PENDING_INTENT_CODE_DAILY_FORECAST_2
             )
         )
         views.setOnClickPendingIntent(
             R.id.widget_day_week_icon_3,
             getDailyForecastPendingIntent(
-                context, location, index + 2, Widgets.DAY_WEEK_PENDING_INTENT_CODE_DAILY_FORECAST_3
+                context,
+                location,
+                index + 2,
+                Widgets.DAY_WEEK_PENDING_INTENT_CODE_DAILY_FORECAST_3
             )
         )
         views.setOnClickPendingIntent(
             R.id.widget_day_week_icon_4,
             getDailyForecastPendingIntent(
-                context, location, index + 3, Widgets.DAY_WEEK_PENDING_INTENT_CODE_DAILY_FORECAST_4
+                context,
+                location,
+                index + 3,
+                Widgets.DAY_WEEK_PENDING_INTENT_CODE_DAILY_FORECAST_4
             )
         )
         views.setOnClickPendingIntent(
             R.id.widget_day_week_icon_5,
             getDailyForecastPendingIntent(
-                context, location, index + 4, Widgets.DAY_WEEK_PENDING_INTENT_CODE_DAILY_FORECAST_5
+                context,
+                location,
+                index + 4,
+                Widgets.DAY_WEEK_PENDING_INTENT_CODE_DAILY_FORECAST_5
             )
         )
 
@@ -409,9 +449,7 @@ object DayWeekWidgetIMP : AbstractRemoteViewsPresenter() {
         if (subtitleData == "lunar") {
             views.setOnClickPendingIntent(
                 R.id.widget_day_week_subtitle,
-                getCalendarPendingIntent(
-                    context, Widgets.DAY_WEEK_PENDING_INTENT_CODE_CALENDAR
-                )
+                getCalendarPendingIntent(context, Widgets.DAY_WEEK_PENDING_INTENT_CODE_CALENDAR)
             )
         }
     }

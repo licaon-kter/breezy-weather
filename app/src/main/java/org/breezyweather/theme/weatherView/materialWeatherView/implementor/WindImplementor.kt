@@ -31,7 +31,7 @@ import kotlin.math.sin
 class WindImplementor(
     @Size(2) canvasSizes: IntArray,
     animate: Boolean,
-    daylight: Boolean
+    daylight: Boolean,
 ) : WeatherAnimationImplementor() {
     private val mAnimate = animate
     private val mPaint = Paint().apply {
@@ -46,7 +46,7 @@ class WindImplementor(
         private val mViewWidth: Int,
         private val mViewHeight: Int,
         @ColorInt val color: Int,
-        val scale: Float
+        val scale: Float,
     ) {
         var x = 0f
         var y = 0f
@@ -105,15 +105,19 @@ class WindImplementor(
     }
 
     init {
-        val colors = if (daylight) intArrayOf(
-            Color.rgb(240, 200, 148),
-            Color.rgb(237, 178, 100),
-            Color.rgb(209, 142, 54)
-        ) else intArrayOf(
-            Color.rgb(240, 200, 148),
-            Color.rgb(237, 178, 100),
-            Color.rgb(209, 142, 54)
-        )
+        val colors = if (daylight) {
+            intArrayOf(
+                Color.rgb(240, 200, 148),
+                Color.rgb(237, 178, 100),
+                Color.rgb(209, 142, 54)
+            )
+        } else {
+            intArrayOf(
+                Color.rgb(240, 200, 148),
+                Color.rgb(237, 178, 100),
+                Color.rgb(209, 142, 54)
+            )
+        }
         val scales = floatArrayOf(0.6f, 0.8f, 1f)
         mWinds = Array(WIND_COUNT) { i ->
             Wind(
@@ -130,7 +134,7 @@ class WindImplementor(
         @Size(2) canvasSizes: IntArray,
         interval: Long,
         rotation2D: Float,
-        rotation3D: Float
+        rotation3D: Float,
     ) {
         for (w in mWinds) {
             w.move(interval, if (mLastRotation3D == INITIAL_ROTATION_3D) 0f else rotation3D - mLastRotation3D)
@@ -143,7 +147,7 @@ class WindImplementor(
         canvas: Canvas,
         scrollRate: Float,
         rotation2D: Float,
-        rotation3D: Float
+        rotation3D: Float,
     ) {
         var rotation2Dc = rotation2D
         if (scrollRate < 1) {

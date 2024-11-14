@@ -53,7 +53,9 @@ import kotlin.math.roundToInt
 object DayWidgetIMP : AbstractRemoteViewsPresenter() {
 
     fun updateWidgetView(
-        context: Context, location: Location?, pollenIndexSource: PollenIndexSource?
+        context: Context,
+        location: Location?,
+        pollenIndexSource: PollenIndexSource?,
     ) {
         val config = getWidgetConfig(context, context.getString(R.string.sp_widget_day_setting))
         val views = getRemoteViews(
@@ -68,9 +70,16 @@ object DayWidgetIMP : AbstractRemoteViewsPresenter() {
     }
 
     fun getRemoteViews(
-        context: Context, location: Location?,
-        viewStyle: String?, cardStyle: String?, cardAlpha: Int, textColor: String?, textSize: Int,
-        hideSubtitle: Boolean, subtitleData: String?, pollenIndexSource: PollenIndexSource?
+        context: Context,
+        location: Location?,
+        viewStyle: String?,
+        cardStyle: String?,
+        cardAlpha: Int,
+        textColor: String?,
+        textSize: Int,
+        hideSubtitle: Boolean,
+        subtitleData: String?,
+        pollenIndexSource: PollenIndexSource?,
     ): RemoteViews {
         val settings = SettingsManager.getInstance(context)
         val temperatureUnit = settings.temperatureUnit
@@ -97,9 +106,17 @@ object DayWidgetIMP : AbstractRemoteViewsPresenter() {
     }
 
     private fun buildWidgetView(
-        context: Context, location: Location?, temperatureUnit: TemperatureUnit, speedUnit: SpeedUnit,
-        color: WidgetColor, minimalIcon: Boolean, viewStyle: String?, textSize: Int,
-        hideSubtitle: Boolean, subtitleData: String?, pollenIndexSource: PollenIndexSource?
+        context: Context,
+        location: Location?,
+        temperatureUnit: TemperatureUnit,
+        speedUnit: SpeedUnit,
+        color: WidgetColor,
+        minimalIcon: Boolean,
+        viewStyle: String?,
+        textSize: Int,
+        hideSubtitle: Boolean,
+        subtitleData: String?,
+        pollenIndexSource: PollenIndexSource?,
     ): RemoteViews {
         val views = RemoteViews(
             context.packageName,
@@ -226,7 +243,10 @@ object DayWidgetIMP : AbstractRemoteViewsPresenter() {
     }
 
     private fun getTitleText(
-        context: Context, location: Location, viewStyle: String?, unit: TemperatureUnit
+        context: Context,
+        location: Location,
+        viewStyle: String?,
+        unit: TemperatureUnit,
     ): String? {
         val weather = location.weather ?: return null
         return when (viewStyle) {
@@ -267,7 +287,10 @@ object DayWidgetIMP : AbstractRemoteViewsPresenter() {
     }
 
     private fun getSubtitleText(
-        context: Context, weather: Weather, viewStyle: String?, unit: TemperatureUnit
+        context: Context,
+        weather: Weather,
+        viewStyle: String?,
+        unit: TemperatureUnit,
     ): String? {
         return when (viewStyle) {
             "rectangle" -> Widgets.buildWidgetDayStyleText(context, weather, unit)[1]
@@ -295,9 +318,14 @@ object DayWidgetIMP : AbstractRemoteViewsPresenter() {
     }
 
     private fun getTimeText(
-        context: Context, location: Location, weather: Weather,
-        viewStyle: String?, subtitleData: String?, temperatureUnit: TemperatureUnit,
-        speedUnit: SpeedUnit, pollenIndexSource: PollenIndexSource?
+        context: Context,
+        location: Location,
+        weather: Weather,
+        viewStyle: String?,
+        subtitleData: String?,
+        temperatureUnit: TemperatureUnit,
+        speedUnit: SpeedUnit,
+        pollenIndexSource: PollenIndexSource?,
     ): String? {
         return when (subtitleData) {
             "time" -> when (viewStyle) {
@@ -321,7 +349,9 @@ object DayWidgetIMP : AbstractRemoteViewsPresenter() {
                         + " ("
                         + airQuality.getIndex(null)
                         + ")")
-                } else null
+                } else {
+                    null
+                }
             }
             "wind" -> weather.current?.wind?.getShortDescription(context, speedUnit)
             "lunar" -> when (viewStyle) {
@@ -377,23 +407,23 @@ object DayWidgetIMP : AbstractRemoteViewsPresenter() {
     }
 
     private fun setOnClickPendingIntent(
-        context: Context, views: RemoteViews, location: Location, viewStyle: String?, subtitleData: String?
+        context: Context,
+        views: RemoteViews,
+        location: Location,
+        viewStyle: String?,
+        subtitleData: String?,
     ) {
         // weather.
         views.setOnClickPendingIntent(
             R.id.widget_day_weather,
-            getWeatherPendingIntent(
-                context, location, Widgets.DAY_PENDING_INTENT_CODE_WEATHER
-            )
+            getWeatherPendingIntent(context, location, Widgets.DAY_PENDING_INTENT_CODE_WEATHER)
         )
 
         // title.
         if (viewStyle == "oreo" || viewStyle == "oreo_google_sans") {
             views.setOnClickPendingIntent(
                 R.id.widget_day_title,
-                getCalendarPendingIntent(
-                    context, Widgets.DAY_PENDING_INTENT_CODE_CALENDAR
-                )
+                getCalendarPendingIntent(context, Widgets.DAY_PENDING_INTENT_CODE_CALENDAR)
             )
         }
 
@@ -401,9 +431,7 @@ object DayWidgetIMP : AbstractRemoteViewsPresenter() {
         if (viewStyle == "pixel" || subtitleData == "lunar") {
             views.setOnClickPendingIntent(
                 R.id.widget_day_time,
-                getCalendarPendingIntent(
-                    context, Widgets.DAY_PENDING_INTENT_CODE_CALENDAR
-                )
+                getCalendarPendingIntent(context, Widgets.DAY_PENDING_INTENT_CODE_CALENDAR)
             )
         }
     }

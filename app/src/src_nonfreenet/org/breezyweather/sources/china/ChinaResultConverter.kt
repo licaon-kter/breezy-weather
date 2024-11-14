@@ -51,7 +51,7 @@ import java.util.Objects
 
 fun convert(
     location: Location?, // Null if location search, current location if reverse geocoding
-    result: ChinaLocationResult
+    result: ChinaLocationResult,
 ): Location {
     return (location ?: Location())
         .copy(
@@ -69,10 +69,13 @@ fun convert(
 fun convert(
     location: Location,
     forecastResult: ChinaForecastResult,
-    minutelyResult: ChinaMinutelyResult
+    minutelyResult: ChinaMinutelyResult,
 ): WeatherWrapper {
     // If the API doesn’t return current, hourly or daily, consider data as garbage and keep cached data
-    if (forecastResult.current == null || forecastResult.forecastDaily == null || forecastResult.forecastHourly == null) {
+    if (forecastResult.current == null ||
+        forecastResult.forecastDaily == null ||
+        forecastResult.forecastHourly == null
+    ) {
         throw InvalidOrIncompleteDataException()
     }
 
@@ -99,7 +102,7 @@ fun convert(
 fun getCurrent(
     current: ChinaCurrent?,
     aqi: ChinaAqi?,
-    minutelyResult: ChinaMinutelyResult? = null
+    minutelyResult: ChinaMinutelyResult? = null,
 ): Current? {
     if (current == null) return null
 
@@ -110,13 +113,19 @@ fun getCurrent(
             temperature = current.temperature?.value?.toDoubleOrNull(),
             apparentTemperature = current.feelsLike?.value?.toDoubleOrNull()
         ),
-        wind = if (current.wind != null) Wind(
-            degree = current.wind.direction?.value?.toDoubleOrNull(),
-            speed = current.wind.speed?.value?.toDoubleOrNull()?.div(3.6)
-        ) else null,
+        wind = if (current.wind != null) {
+            Wind(
+                degree = current.wind.direction?.value?.toDoubleOrNull(),
+                speed = current.wind.speed?.value?.toDoubleOrNull()?.div(3.6)
+            )
+        } else {
+            null
+        },
         uV = if (current.uvIndex != null) {
             UV(index = current.uvIndex.toDoubleOrNull())
-        } else null,
+        } else {
+            null
+        },
         airQuality = aqi?.let {
             AirQuality(
                 pM25 = it.pm25?.toDoubleOrNull(),
@@ -129,23 +138,31 @@ fun getCurrent(
         },
         relativeHumidity = if (!current.humidity?.value.isNullOrEmpty()) {
             current.humidity!!.value!!.toDoubleOrNull()
-        } else null,
+        } else {
+            null
+        },
         pressure = if (!current.pressure?.value.isNullOrEmpty()) {
             current.pressure!!.value!!.toDoubleOrNull()
-        } else null,
+        } else {
+            null
+        },
         visibility = if (!current.visibility?.value.isNullOrEmpty()) {
             current.visibility!!.value!!.toDoubleOrNull()?.times(1000)
-        } else null,
+        } else {
+            null
+        },
         hourlyForecast = if (minutelyResult?.precipitation != null) {
             minutelyResult.precipitation.description
-        } else null
+        } else {
+            null
+        }
     )
 }
 
 private fun getDailyList(
     publishDate: Date,
     location: Location,
-    dailyForecast: ChinaForecastDaily
+    dailyForecast: ChinaForecastDaily,
 ): List<Daily> {
     if (dailyForecast.weather == null || dailyForecast.weather.value.isNullOrEmpty()) return emptyList()
 
@@ -171,10 +188,14 @@ private fun getDailyList(
                     precipitationProbability = PrecipitationProbability(
                         total = getPrecipitationProbability(dailyForecast, index)
                     ),
-                    wind = if (dailyForecast.wind != null) Wind(
-                        degree = dailyForecast.wind.direction?.value?.getOrNull(index)?.from?.toDoubleOrNull(),
-                        speed = dailyForecast.wind.speed?.value?.getOrNull(index)?.from?.toDoubleOrNull()?.div(3.6)
-                    ) else null
+                    wind = if (dailyForecast.wind != null) {
+                        Wind(
+                            degree = dailyForecast.wind.direction?.value?.getOrNull(index)?.from?.toDoubleOrNull(),
+                            speed = dailyForecast.wind.speed?.value?.getOrNull(index)?.from?.toDoubleOrNull()?.div(3.6)
+                        )
+                    } else {
+                        null
+                    }
                 ),
                 night = HalfDay(
                     weatherText = getWeatherText(weather.to),
@@ -186,10 +207,14 @@ private fun getDailyList(
                     precipitationProbability = PrecipitationProbability(
                         total = getPrecipitationProbability(dailyForecast, index)
                     ),
-                    wind = if (dailyForecast.wind != null) Wind(
-                        degree = dailyForecast.wind.direction?.value?.getOrNull(index)?.to?.toDoubleOrNull(),
-                        speed = dailyForecast.wind.speed?.value?.getOrNull(index)?.to?.toDoubleOrNull()?.div(3.6)
-                    ) else null
+                    wind = if (dailyForecast.wind != null) {
+                        Wind(
+                            degree = dailyForecast.wind.direction?.value?.getOrNull(index)?.to?.toDoubleOrNull(),
+                            speed = dailyForecast.wind.speed?.value?.getOrNull(index)?.to?.toDoubleOrNull()?.div(3.6)
+                        )
+                    } else {
+                        null
+                    }
                 ),
                 sun = Astro(
                     riseDate = dailyForecast.sunRiseSet?.value?.getOrNull(index)?.from,
@@ -213,7 +238,7 @@ private fun getPrecipitationProbability(forecast: ChinaForecastDaily, index: Int
 private fun getHourlyList(
     publishDate: Date,
     location: Location,
-    hourlyForecast: ChinaForecastHourly
+    hourlyForecast: ChinaForecastHourly,
 ): List<HourlyWrapper> {
     if (hourlyForecast.weather == null || hourlyForecast.weather.value.isNullOrEmpty()) return emptyList()
 
@@ -236,10 +261,14 @@ private fun getHourlyList(
                 temperature = Temperature(
                     temperature = hourlyForecast.temperature?.value?.getOrNull(index)?.toDouble()
                 ),
-                wind = if (hourlyForecast.wind != null) Wind(
-                    degree = hourlyForecast.wind.value?.getOrNull(index)?.direction?.toDoubleOrNull(),
-                    speed = hourlyForecast.wind.value?.getOrNull(index)?.speed?.toDoubleOrNull()?.div(3.6)
-                ) else null
+                wind = if (hourlyForecast.wind != null) {
+                    Wind(
+                        degree = hourlyForecast.wind.value?.getOrNull(index)?.direction?.toDoubleOrNull(),
+                        speed = hourlyForecast.wind.value?.getOrNull(index)?.speed?.toDoubleOrNull()?.div(3.6)
+                    )
+                } else {
+                    null
+                }
             )
         )
     }
@@ -248,7 +277,7 @@ private fun getHourlyList(
 
 private fun getMinutelyList(
     location: Location,
-    minutelyResult: ChinaMinutelyResult
+    minutelyResult: ChinaMinutelyResult,
 ): List<Minutely> {
     if (minutelyResult.precipitation == null || minutelyResult.precipitation.value.isNullOrEmpty()) return emptyList()
 
@@ -278,7 +307,8 @@ private fun getAlertList(result: ChinaForecastResult): List<Alert> {
     return result.alerts.map { alert ->
         Alert(
             // Create unique ID from: title, level, start time
-            alertId = Objects.hash(alert.title, alert.level, alert.pubTime?.time ?: System.currentTimeMillis()).toString(),
+            alertId = Objects.hash(alert.title, alert.level, alert.pubTime?.time ?: System.currentTimeMillis())
+                .toString(),
             startDate = alert.pubTime,
             headline = alert.title,
             description = alert.detail,
@@ -291,7 +321,7 @@ private fun getAlertList(result: ChinaForecastResult): List<Alert> {
 fun convertSecondary(
     location: Location,
     forecastResult: ChinaForecastResult,
-    minutelyResult: ChinaMinutelyResult
+    minutelyResult: ChinaMinutelyResult,
 ): SecondaryWeatherWrapper {
 
     return SecondaryWeatherWrapper(

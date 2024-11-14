@@ -47,7 +47,7 @@ import javax.inject.Named
 
 class BrightSkyService @Inject constructor(
     @ApplicationContext context: Context,
-    @Named("JsonClient") val client: Retrofit.Builder
+    @Named("JsonClient") val client: Retrofit.Builder,
 ) : HttpSource(), MainWeatherSource, SecondaryWeatherSource, ConfigurableSource {
 
     override val id = "brightsky"
@@ -72,13 +72,16 @@ class BrightSkyService @Inject constructor(
     )
 
     override fun isFeatureSupportedInMainForLocation(
-        location: Location, feature: SecondaryWeatherSourceFeature?
+        location: Location,
+        feature: SecondaryWeatherSourceFeature?,
     ): Boolean {
         return location.countryCode.equals("DE", ignoreCase = true)
     }
 
     override fun requestWeather(
-        context: Context, location: Location, ignoreFeatures: List<SecondaryWeatherSourceFeature>
+        context: Context,
+        location: Location,
+        ignoreFeatures: List<SecondaryWeatherSourceFeature>,
     ): Observable<WeatherWrapper> {
         val initialDate = Date().toTimezoneNoHour(location.javaTimeZone)
         val date = initialDate!!.toCalendarWithTimeZone(location.javaTimeZone).apply {
@@ -139,7 +142,8 @@ class BrightSkyService @Inject constructor(
         SecondaryWeatherSourceFeature.FEATURE_ALERT
     )
     override fun isFeatureSupportedInSecondaryForLocation(
-        location: Location, feature: SecondaryWeatherSourceFeature
+        location: Location,
+        feature: SecondaryWeatherSourceFeature,
     ): Boolean {
         return isFeatureSupportedInMainForLocation(location, feature)
     }
@@ -151,8 +155,9 @@ class BrightSkyService @Inject constructor(
     override val normalsAttribution = null
 
     override fun requestSecondaryWeather(
-        context: Context, location: Location,
-        requestedFeatures: List<SecondaryWeatherSourceFeature>
+        context: Context,
+        location: Location,
+        requestedFeatures: List<SecondaryWeatherSourceFeature>,
     ): Observable<SecondaryWeatherWrapper> {
 
         val currentWeather = if (requestedFeatures.contains(SecondaryWeatherSourceFeature.FEATURE_ALERT)) {

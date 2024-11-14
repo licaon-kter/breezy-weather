@@ -33,7 +33,7 @@ class AirQuality(
     val sO2: Double? = null,
     val nO2: Double? = null,
     val o3: Double? = null,
-    val cO: Double? = null
+    val cO: Double? = null,
 ) : Serializable {
 
     val isValid: Boolean

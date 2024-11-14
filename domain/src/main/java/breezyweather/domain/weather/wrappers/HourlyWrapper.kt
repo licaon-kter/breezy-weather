@@ -50,7 +50,7 @@ data class HourlyWrapper(
     /**
      * Sunshine duration in hours (ex: 0.5 means 30 min)
      */
-    val sunshineDuration: Double? = null
+    val sunshineDuration: Double? = null,
 ) {
     fun toHourly(
         isDaylight: Boolean? = null,

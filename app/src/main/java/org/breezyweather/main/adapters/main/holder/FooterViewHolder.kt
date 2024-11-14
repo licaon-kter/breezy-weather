@@ -49,14 +49,17 @@ import org.breezyweather.theme.compose.BreezyWeatherTheme
 import org.breezyweather.theme.resource.providers.ResourceProvider
 
 class FooterViewHolder(
-    private val composeView: ComposeView
+    private val composeView: ComposeView,
 ) : AbstractMainViewHolder(composeView) {
 
     @SuppressLint("SetTextI18n")
     @CallSuper
     override fun onBindView(
-        context: Context, location: Location, provider: ResourceProvider,
-        listAnimationEnabled: Boolean, itemAnimationEnabled: Boolean
+        context: Context,
+        location: Location,
+        provider: ResourceProvider,
+        listAnimationEnabled: Boolean,
+        itemAnimationEnabled: Boolean,
     ) {
         super.onBindView(context, location, provider, listAnimationEnabled, itemAnimationEnabled)
 
@@ -80,31 +83,45 @@ class FooterViewHolder(
         val credits = mutableMapOf<String, String?>()
         credits["weather"] = if (distinctSources[location.weatherSource] is MainWeatherSource) {
             (distinctSources[location.weatherSource] as MainWeatherSource).weatherAttribution
-        } else null
+        } else {
+            null
+        }
         credits["current"] = if (distinctSources[location.currentSourceNotNull] is SecondaryWeatherSource &&
             (distinctSources[location.currentSourceNotNull] as SecondaryWeatherSource).currentAttribution != credits["weather"]) {
             (distinctSources[location.currentSourceNotNull] as SecondaryWeatherSource).currentAttribution
-        } else null
+        } else {
+            null
+        }
         credits["minutely"] = if (distinctSources[location.minutelySourceNotNull] is SecondaryWeatherSource &&
             (distinctSources[location.minutelySourceNotNull] as SecondaryWeatherSource).minutelyAttribution != credits["weather"]) {
             (distinctSources[location.minutelySourceNotNull] as SecondaryWeatherSource).minutelyAttribution
-        } else null
+        } else {
+            null
+        }
         credits["alert"] = if (distinctSources[location.alertSourceNotNull] is SecondaryWeatherSource &&
             (distinctSources[location.alertSourceNotNull] as SecondaryWeatherSource).alertAttribution != credits["weather"]) {
             (distinctSources[location.alertSourceNotNull] as SecondaryWeatherSource).alertAttribution
-        } else null
+        } else {
+            null
+        }
         credits["airQuality"] = if (distinctSources[location.airQualitySourceNotNull] is SecondaryWeatherSource &&
             (distinctSources[location.airQualitySourceNotNull] as SecondaryWeatherSource).airQualityAttribution != credits["weather"]) {
             (distinctSources[location.airQualitySourceNotNull] as SecondaryWeatherSource).airQualityAttribution
-        } else null
+        } else {
+            null
+        }
         credits["pollen"] = if (distinctSources[location.pollenSourceNotNull] is SecondaryWeatherSource &&
             (distinctSources[location.pollenSourceNotNull] as SecondaryWeatherSource).pollenAttribution != credits["weather"]) {
             (distinctSources[location.pollenSourceNotNull] as SecondaryWeatherSource).pollenAttribution
-        } else null
+        } else {
+            null
+        }
         credits["normals"] = if (distinctSources[location.normalsSourceNotNull] is SecondaryWeatherSource &&
             (distinctSources[location.normalsSourceNotNull] as SecondaryWeatherSource).normalsAttribution != credits["weather"]) {
             (distinctSources[location.normalsSourceNotNull] as SecondaryWeatherSource).normalsAttribution
-        } else null
+        } else {
+            null
+        }
 
         val creditsText = StringBuilder()
         location.weather?.let { weather ->

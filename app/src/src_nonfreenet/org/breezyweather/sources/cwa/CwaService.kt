@@ -58,13 +58,13 @@ import javax.inject.Named
 
 class CwaService @Inject constructor(
     @ApplicationContext context: Context,
-    @Named("JsonClient") client: Retrofit.Builder
+    @Named("JsonClient") client: Retrofit.Builder,
 ) : HttpSource(), MainWeatherSource, SecondaryWeatherSource,
     ReverseGeocodingSource, LocationParametersSource, ConfigurableSource {
 
     override val id = "cwa"
     override val name by lazy {
-        with (context.currentLocale.code) {
+        with(context.currentLocale.code) {
             when {
                 startsWith("zh") -> "中央氣象署"
                 else -> "Central Weather Administration (CWA)"
@@ -72,7 +72,7 @@ class CwaService @Inject constructor(
         }
     }
     override val privacyPolicyUrl by lazy {
-        with (context.currentLocale.code) {
+        with(context.currentLocale.code) {
             when {
                 startsWith("zh") -> "https://www.cwa.gov.tw/V8/C/private.html"
                 else -> "https://www.cwa.gov.tw/V8/E/private.html"
@@ -101,14 +101,16 @@ class CwaService @Inject constructor(
 
     override fun isFeatureSupportedInMainForLocation(
         location: Location,
-        feature: SecondaryWeatherSourceFeature?
+        feature: SecondaryWeatherSourceFeature?,
     ): Boolean {
         return location.countryCode.equals("TW", ignoreCase = true)
     }
 
     @SuppressLint("CheckResult")
     override fun requestWeather(
-        context: Context, location: Location, ignoreFeatures: List<SecondaryWeatherSourceFeature>
+        context: Context,
+        location: Location,
+        ignoreFeatures: List<SecondaryWeatherSourceFeature>,
     ): Observable<WeatherWrapper> {
         // Use of API key is mandatory for CWA's API calls.
         if (!isConfigured) {
@@ -254,7 +256,7 @@ class CwaService @Inject constructor(
     )
     override fun isFeatureSupportedInSecondaryForLocation(
         location: Location,
-        feature: SecondaryWeatherSourceFeature
+        feature: SecondaryWeatherSourceFeature,
     ): Boolean {
         return isFeatureSupportedInMainForLocation(location, feature)
     }
@@ -266,7 +268,9 @@ class CwaService @Inject constructor(
     override val normalsAttribution = weatherAttribution
 
     override fun requestSecondaryWeather(
-        context: Context, location: Location, requestedFeatures: List<SecondaryWeatherSourceFeature>
+        context: Context,
+        location: Location,
+        requestedFeatures: List<SecondaryWeatherSourceFeature>,
     ): Observable<SecondaryWeatherWrapper> {
         if (!isFeatureSupportedInSecondaryForLocation(location, SecondaryWeatherSourceFeature.FEATURE_AIR_QUALITY)
             || !isFeatureSupportedInSecondaryForLocation(location, SecondaryWeatherSourceFeature.FEATURE_ALERT)
@@ -350,13 +354,19 @@ class CwaService @Inject constructor(
                 if (requestedFeatures.contains(SecondaryWeatherSourceFeature.FEATURE_AIR_QUALITY) ||
                     requestedFeatures.contains(SecondaryWeatherSourceFeature.FEATURE_CURRENT)) {
                     weatherResult
-                } else null,
+                } else {
+                    null
+                },
                 if (requestedFeatures.contains(SecondaryWeatherSourceFeature.FEATURE_ALERT)) {
                     alertResult
-                } else null,
+                } else {
+                    null
+                },
                 if (requestedFeatures.contains(SecondaryWeatherSourceFeature.FEATURE_NORMALS)) {
                     normalsResult
-                } else null,
+                } else {
+                    null
+                },
                 location,
                 id
             )
@@ -365,7 +375,8 @@ class CwaService @Inject constructor(
 
     // Reverse geocoding
     override fun requestReverseGeocodingLocation(
-        context: Context, location: Location
+        context: Context,
+        location: Location,
     ): Observable<List<Location>> {
 
         // Use of API key is mandatory for CWA's API calls.
@@ -394,7 +405,7 @@ class CwaService @Inject constructor(
     override fun needsLocationParametersRefresh(
         location: Location,
         coordinatesChanged: Boolean,
-        features: List<SecondaryWeatherSourceFeature>
+        features: List<SecondaryWeatherSourceFeature>,
     ): Boolean {
         if (coordinatesChanged) return true
 
@@ -408,7 +419,8 @@ class CwaService @Inject constructor(
     }
 
     override fun requestLocationParameters(
-        context: Context, location: Location
+        context: Context,
+        location: Location,
     ): Observable<Map<String, String>> {
         // Use of API key is mandatory for CWA's API calls.
         if (!isConfigured) {

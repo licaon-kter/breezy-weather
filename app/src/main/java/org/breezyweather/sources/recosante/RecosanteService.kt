@@ -42,7 +42,7 @@ import javax.inject.Named
  */
 class RecosanteService @Inject constructor(
     @ApplicationContext context: Context,
-    @Named("JsonClient") val client: Retrofit.Builder
+    @Named("JsonClient") val client: Retrofit.Builder,
 ) : HttpSource(), SecondaryWeatherSource, PollenIndexSource, LocationParametersSource,
     ConfigurableSource {
 
@@ -68,7 +68,7 @@ class RecosanteService @Inject constructor(
     override val supportedFeaturesInSecondary = listOf(SecondaryWeatherSourceFeature.FEATURE_POLLEN)
     override fun isFeatureSupportedInSecondaryForLocation(
         location: Location,
-        feature: SecondaryWeatherSourceFeature
+        feature: SecondaryWeatherSourceFeature,
     ): Boolean {
         return !location.countryCode.isNullOrEmpty()
             && location.countryCode.equals("FR", ignoreCase = true)
@@ -81,8 +81,9 @@ class RecosanteService @Inject constructor(
     override val normalsAttribution = null
 
     override fun requestSecondaryWeather(
-        context: Context, location: Location,
-        requestedFeatures: List<SecondaryWeatherSourceFeature>
+        context: Context,
+        location: Location,
+        requestedFeatures: List<SecondaryWeatherSourceFeature>,
     ): Observable<SecondaryWeatherWrapper> {
         if (!isFeatureSupportedInSecondaryForLocation(location, SecondaryWeatherSourceFeature.FEATURE_POLLEN)) {
             // TODO: return Observable.error(UnsupportedFeatureForLocationException())
@@ -106,7 +107,7 @@ class RecosanteService @Inject constructor(
     override fun needsLocationParametersRefresh(
         location: Location,
         coordinatesChanged: Boolean,
-        features: List<SecondaryWeatherSourceFeature>
+        features: List<SecondaryWeatherSourceFeature>,
     ): Boolean {
         if (coordinatesChanged) return true
 
@@ -117,7 +118,8 @@ class RecosanteService @Inject constructor(
     }
 
     override fun requestLocationParameters(
-        context: Context, location: Location
+        context: Context,
+        location: Location,
     ): Observable<Map<String, String>> {
         return mGeoApi.getCommunes(location.longitude, location.latitude)
             .map { result ->

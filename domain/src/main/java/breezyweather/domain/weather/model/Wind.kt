@@ -37,7 +37,7 @@ data class Wind(
     /**
      * In m/s
      */
-    val gusts: Double? = null
+    val gusts: Double? = null,
 ) : Serializable {
 
     val isValid: Boolean

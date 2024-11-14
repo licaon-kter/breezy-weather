@@ -26,7 +26,7 @@ class MoonPhase(
     /**
      * Angle between 0 to 360 (no negative! Add 180 if you have negative numbers)
      */
-    val angle: Int? = null
+    val angle: Int? = null,
 ) : Serializable {
 
     val isValid: Boolean

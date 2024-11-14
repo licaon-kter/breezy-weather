@@ -27,7 +27,7 @@ class GeoJsonFeature(
     geometry: Geometry<*>?,
     id: String?,
     properties: HashMap<String, String?>?,
-    boundingBox: LatLngBounds?
+    boundingBox: LatLngBounds?,
 ) : Feature(geometry, id, properties) {
     private val mBoundingBox: LatLngBounds?
 

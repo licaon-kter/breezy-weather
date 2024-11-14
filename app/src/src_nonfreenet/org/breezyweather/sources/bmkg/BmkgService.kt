@@ -48,7 +48,7 @@ import kotlin.text.ifEmpty
 
 class BmkgService @Inject constructor(
     @ApplicationContext context: Context,
-    @Named("JsonClient") client: Retrofit.Builder
+    @Named("JsonClient") client: Retrofit.Builder,
 ) : HttpSource(), MainWeatherSource, SecondaryWeatherSource, ReverseGeocodingSource, ConfigurableSource {
 
     override val id = "bmkg"
@@ -80,7 +80,7 @@ class BmkgService @Inject constructor(
 
     override fun isFeatureSupportedInMainForLocation(
         location: Location,
-        feature: SecondaryWeatherSourceFeature?
+        feature: SecondaryWeatherSourceFeature?,
     ): Boolean {
         return location.countryCode.equals("ID", ignoreCase = true)
     }
@@ -88,7 +88,7 @@ class BmkgService @Inject constructor(
     override fun requestWeather(
         context: Context,
         location: Location,
-        ignoreFeatures: List<SecondaryWeatherSourceFeature>
+        ignoreFeatures: List<SecondaryWeatherSourceFeature>,
     ): Observable<WeatherWrapper> {
         // API Key is needed for warnings, but not for current/forecast.
         // Only throw exception if warnings are needed.
@@ -190,7 +190,7 @@ class BmkgService @Inject constructor(
 
     override fun isFeatureSupportedInSecondaryForLocation(
         location: Location,
-        feature: SecondaryWeatherSourceFeature
+        feature: SecondaryWeatherSourceFeature,
     ): Boolean {
         return isFeatureSupportedInMainForLocation(location, feature)
     }
@@ -202,7 +202,9 @@ class BmkgService @Inject constructor(
     override val normalsAttribution = null
 
     override fun requestSecondaryWeather(
-        context: Context, location: Location, requestedFeatures: List<SecondaryWeatherSourceFeature>
+        context: Context,
+        location: Location,
+        requestedFeatures: List<SecondaryWeatherSourceFeature>,
     ): Observable<SecondaryWeatherWrapper> {
         if (!isFeatureSupportedInSecondaryForLocation(location, SecondaryWeatherSourceFeature.FEATURE_ALERT)
             || !isFeatureSupportedInSecondaryForLocation(location, SecondaryWeatherSourceFeature.FEATURE_CURRENT)
@@ -281,29 +283,41 @@ class BmkgService @Inject constructor(
                 location = location,
                 currentResult = if (requestedFeatures.contains(SecondaryWeatherSourceFeature.FEATURE_CURRENT)) {
                     currentResult
-                } else null,
+                } else {
+                    null
+                },
                 warningResult = if (requestedFeatures.contains(SecondaryWeatherSourceFeature.FEATURE_ALERT)) {
                     warningResult
-                } else null,
+                } else {
+                    null
+                },
                 ibf1Result = if (requestedFeatures.contains(SecondaryWeatherSourceFeature.FEATURE_ALERT)) {
                     ibf1Result
-                } else null,
+                } else {
+                    null
+                },
                 ibf2Result = if (requestedFeatures.contains(SecondaryWeatherSourceFeature.FEATURE_ALERT)) {
                     ibf2Result
-                } else null,
+                } else {
+                    null
+                },
                 ibf3Result = if (requestedFeatures.contains(SecondaryWeatherSourceFeature.FEATURE_ALERT)) {
                     ibf3Result
-                } else null,
+                } else {
+                    null
+                },
                 pm25Result = if (requestedFeatures.contains(SecondaryWeatherSourceFeature.FEATURE_AIR_QUALITY)) {
                     pm25Result
-                } else null
+                } else {
+                    null
+                }
             )
         }
     }
 
     override fun requestReverseGeocodingLocation(
         context: Context,
-        location: Location
+        location: Location,
     ): Observable<List<Location>> {
         val locationList = mutableListOf<Location>()
         return mApi.getLocation(

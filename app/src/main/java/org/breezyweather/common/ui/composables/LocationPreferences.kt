@@ -55,7 +55,7 @@ import org.breezyweather.theme.compose.DayNightTheme
 fun LocationPreference(
     activity: MainActivity,
     location: Location,
-    onClose: ((location: Location?) -> Unit)
+    onClose: ((location: Location?) -> Unit),
 ) {
     val dialogWeatherSourcesOpenState = remember { mutableStateOf(false) }
     val dialogAdditionalLocationPreferencesOpenState = remember { mutableStateOf(false) }
@@ -150,7 +150,7 @@ fun LocationPreference(
                     Text(
                         text = stringResource(R.string.settings_per_location),
                         color = MaterialTheme.colorScheme.onSurface,
-                        style = MaterialTheme.typography.headlineSmall,
+                        style = MaterialTheme.typography.headlineSmall
                     )
                 },
                 text = {
@@ -192,9 +192,13 @@ fun LocationPreference(
                                 features = emptyList() // TODO
                             ) {
                                 val newParameters = location.parameters.toMutableMap()
-                                newParameters[preferenceSource.id] = (if (newParameters.getOrElse(preferenceSource.id) { null } != null) {
-                                    newParameters[preferenceSource.id]!!
-                                } else emptyMap()) + it
+                                newParameters[preferenceSource.id] = (
+                                    if (newParameters.getOrElse(preferenceSource.id) { null } != null) {
+                                        newParameters[preferenceSource.id]!!
+                                    } else {
+                                        emptyMap()
+                                    }
+                                    ) + it
                                 dialogAdditionalLocationPreferencesOpenState.value = false
                                 dialogWeatherSourcesOpenState.value = false
                                 onClose(
@@ -246,7 +250,7 @@ fun LocationPreference(
                         Text(
                             text = stringResource(R.string.action_close),
                             color = MaterialTheme.colorScheme.primary,
-                            style = MaterialTheme.typography.labelLarge,
+                            style = MaterialTheme.typography.labelLarge
                         )
                     }
                 }
@@ -259,7 +263,7 @@ fun LocationPreference(
 fun SecondarySourcesPreference(
     sourceManager: SourceManager,
     location: Location,
-    onClose: ((location: Location?) -> Unit)
+    onClose: ((location: Location?) -> Unit),
 ) {
     val dialogLinkOpenState = remember { mutableStateOf(false) }
     val hasChangedMainSource = remember { mutableStateOf(false) }
@@ -281,26 +285,29 @@ fun SecondarySourcesPreference(
     val mainSource = sourceManager.getMainWeatherSource(weatherSource.value)
     val compatibleCurrentSources = secondarySources.filter {
         (it !is ConfigurableSource || it.isConfigured || it.id == currentSource.value) &&
-                it.id != weatherSource.value &&
-                it.supportedFeaturesInSecondary.contains(SecondaryWeatherSourceFeature.FEATURE_CURRENT) &&
-                it.isFeatureSupportedInSecondaryForLocation(
-                    location, SecondaryWeatherSourceFeature.FEATURE_CURRENT
-                )
+            it.id != weatherSource.value &&
+            it.supportedFeaturesInSecondary.contains(SecondaryWeatherSourceFeature.FEATURE_CURRENT) &&
+            it.isFeatureSupportedInSecondaryForLocation(
+                location,
+                SecondaryWeatherSourceFeature.FEATURE_CURRENT
+            )
     }.associate { it.id to it.name }
     val compatibleAirQualitySources = secondarySources.filter {
         (it !is ConfigurableSource || it.isConfigured || it.id == airQualitySource.value) &&
-                it.id != weatherSource.value &&
-                it.supportedFeaturesInSecondary.contains(SecondaryWeatherSourceFeature.FEATURE_AIR_QUALITY) &&
-                it.isFeatureSupportedInSecondaryForLocation(
-                    location, SecondaryWeatherSourceFeature.FEATURE_AIR_QUALITY
-                )
+            it.id != weatherSource.value &&
+            it.supportedFeaturesInSecondary.contains(SecondaryWeatherSourceFeature.FEATURE_AIR_QUALITY) &&
+            it.isFeatureSupportedInSecondaryForLocation(
+                location,
+                SecondaryWeatherSourceFeature.FEATURE_AIR_QUALITY
+            )
     }.associate { it.id to it.name }
     val compatiblePollenSources = secondarySources.filter {
         (it !is ConfigurableSource || it.isConfigured || it.id == pollenSource.value) &&
         it.id != weatherSource.value &&
             it.supportedFeaturesInSecondary.contains(SecondaryWeatherSourceFeature.FEATURE_POLLEN) &&
             it.isFeatureSupportedInSecondaryForLocation(
-                location, SecondaryWeatherSourceFeature.FEATURE_POLLEN
+                location,
+                SecondaryWeatherSourceFeature.FEATURE_POLLEN
             )
     }.associate { it.id to it.name }
     val compatibleMinutelySources = secondarySources.filter {
@@ -308,7 +315,8 @@ fun SecondarySourcesPreference(
         it.id != weatherSource.value &&
             it.supportedFeaturesInSecondary.contains(SecondaryWeatherSourceFeature.FEATURE_MINUTELY) &&
             it.isFeatureSupportedInSecondaryForLocation(
-                location, SecondaryWeatherSourceFeature.FEATURE_MINUTELY
+                location,
+                SecondaryWeatherSourceFeature.FEATURE_MINUTELY
             )
     }.associate { it.id to it.name }
     val compatibleAlertSources = secondarySources.filter {
@@ -316,7 +324,8 @@ fun SecondarySourcesPreference(
         it.id != weatherSource.value &&
             it.supportedFeaturesInSecondary.contains(SecondaryWeatherSourceFeature.FEATURE_ALERT) &&
             it.isFeatureSupportedInSecondaryForLocation(
-                location, SecondaryWeatherSourceFeature.FEATURE_ALERT
+                location,
+                SecondaryWeatherSourceFeature.FEATURE_ALERT
             )
     }.associate { it.id to it.name }
     val compatibleNormalsSources = secondarySources.filter {
@@ -324,7 +333,8 @@ fun SecondarySourcesPreference(
         it.id != weatherSource.value &&
             it.supportedFeaturesInSecondary.contains(SecondaryWeatherSourceFeature.FEATURE_NORMALS) &&
             it.isFeatureSupportedInSecondaryForLocation(
-                location, SecondaryWeatherSourceFeature.FEATURE_NORMALS
+                location,
+                SecondaryWeatherSourceFeature.FEATURE_NORMALS
             )
     }.associate { it.id to it.name }
 
@@ -336,7 +346,7 @@ fun SecondarySourcesPreference(
             Text(
                 text = stringResource(R.string.settings_weather_sources),
                 color = MaterialTheme.colorScheme.onSurface,
-                style = MaterialTheme.typography.headlineSmall,
+                style = MaterialTheme.typography.headlineSmall
             )
         },
         text = {
@@ -406,11 +416,14 @@ fun SecondarySourcesPreference(
                                 ?.contains(SecondaryWeatherSourceFeature.FEATURE_CURRENT)
                             == true
                             && mainSource.isFeatureSupportedInMainForLocation(
-                                location, SecondaryWeatherSourceFeature.FEATURE_CURRENT
+                                location,
+                                SecondaryWeatherSourceFeature.FEATURE_CURRENT
                             )
                         ) {
                             stringResource(R.string.settings_weather_source_main)
-                        } else stringResource(R.string.settings_weather_source_none)
+                        } else {
+                            stringResource(R.string.settings_weather_source_none)
+                        }
                     ) + compatibleCurrentSources,
                     withState = false
                 ) { sourceId ->
@@ -433,11 +446,14 @@ fun SecondarySourcesPreference(
                                 ?.contains(SecondaryWeatherSourceFeature.FEATURE_AIR_QUALITY)
                             == true
                             && mainSource.isFeatureSupportedInMainForLocation(
-                                location, SecondaryWeatherSourceFeature.FEATURE_AIR_QUALITY
+                                location,
+                                SecondaryWeatherSourceFeature.FEATURE_AIR_QUALITY
                             )
                         ) {
                             stringResource(R.string.settings_weather_source_main)
-                        } else stringResource(R.string.settings_weather_source_none)
+                        } else {
+                            stringResource(R.string.settings_weather_source_none)
+                        }
                     ) + compatibleAirQualitySources,
                     withState = false
                 ) { sourceId ->
@@ -460,11 +476,14 @@ fun SecondarySourcesPreference(
                                 ?.contains(SecondaryWeatherSourceFeature.FEATURE_POLLEN)
                             == true
                             && mainSource.isFeatureSupportedInMainForLocation(
-                                location, SecondaryWeatherSourceFeature.FEATURE_POLLEN
+                                location,
+                                SecondaryWeatherSourceFeature.FEATURE_POLLEN
                             )
                         ) {
                             stringResource(R.string.settings_weather_source_main)
-                        } else stringResource(R.string.settings_weather_source_none)
+                        } else {
+                            stringResource(R.string.settings_weather_source_none)
+                        }
                     ) + compatiblePollenSources,
                     withState = false
                 ) { sourceId ->
@@ -487,11 +506,14 @@ fun SecondarySourcesPreference(
                                 ?.contains(SecondaryWeatherSourceFeature.FEATURE_MINUTELY)
                             == true
                             && mainSource.isFeatureSupportedInMainForLocation(
-                                location, SecondaryWeatherSourceFeature.FEATURE_MINUTELY
+                                location,
+                                SecondaryWeatherSourceFeature.FEATURE_MINUTELY
                             )
                         ) {
                             stringResource(R.string.settings_weather_source_main)
-                        } else stringResource(R.string.settings_weather_source_none)
+                        } else {
+                            stringResource(R.string.settings_weather_source_none)
+                        }
                     ) + compatibleMinutelySources,
                     withState = false
                 ) { sourceId ->
@@ -514,11 +536,14 @@ fun SecondarySourcesPreference(
                                 ?.contains(SecondaryWeatherSourceFeature.FEATURE_ALERT)
                             == true
                             && mainSource.isFeatureSupportedInMainForLocation(
-                                location, SecondaryWeatherSourceFeature.FEATURE_ALERT
+                                location,
+                                SecondaryWeatherSourceFeature.FEATURE_ALERT
                             )
                         ) {
                             stringResource(R.string.settings_weather_source_main)
-                        } else stringResource(R.string.settings_weather_source_none)
+                        } else {
+                            stringResource(R.string.settings_weather_source_none)
+                        }
                     ) + compatibleAlertSources,
                     withState = false
                 ) { sourceId ->
@@ -541,11 +566,14 @@ fun SecondarySourcesPreference(
                                 ?.contains(SecondaryWeatherSourceFeature.FEATURE_NORMALS)
                             == true
                             && mainSource.isFeatureSupportedInMainForLocation(
-                                location, SecondaryWeatherSourceFeature.FEATURE_NORMALS
+                                location,
+                                SecondaryWeatherSourceFeature.FEATURE_NORMALS
                             )
                         ) {
                             stringResource(R.string.settings_weather_source_main)
-                        } else stringResource(R.string.settings_weather_source_none)
+                        } else {
+                            stringResource(R.string.settings_weather_source_none)
+                        }
                     ) + compatibleNormalsSources,
                     withState = false
                 ) { sourceId ->
@@ -596,7 +624,7 @@ fun SecondarySourcesPreference(
                 Text(
                     text = stringResource(R.string.action_save),
                     color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.labelLarge,
+                    style = MaterialTheme.typography.labelLarge
                 )
             }
         },
@@ -609,7 +637,7 @@ fun SecondarySourcesPreference(
                 Text(
                     text = stringResource(R.string.action_cancel),
                     color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.labelLarge,
+                    style = MaterialTheme.typography.labelLarge
                 )
             }
         }
@@ -633,7 +661,7 @@ fun SourceView(
     card: Boolean = false,
     colors: ListItemColors = ListItemDefaults.colors(AlertDialogDefaults.containerColor),
     withState: Boolean = true,
-    onValueChanged: (String) -> Unit
+    onValueChanged: (String) -> Unit,
 ) {
     val dialogLinkOpenState = remember { mutableStateOf(false) }
 
@@ -658,7 +686,7 @@ fun SourceView(
                 Text(
                     text = stringResource(R.string.action_help_me_choose),
                     color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.labelLarge,
+                    style = MaterialTheme.typography.labelLarge
                 )
             }
         },

@@ -62,7 +62,7 @@ fun convert(
     sun1Result: HkoAstroResult,
     sun2Result: HkoAstroResult,
     moon1Result: HkoAstroResult,
-    moon2Result: HkoAstroResult
+    moon2Result: HkoAstroResult,
 ): WeatherWrapper {
     return WeatherWrapper(
         current = getCurrent(context, currentResult.RegionalWeather, oneJsonResult),
@@ -78,25 +78,31 @@ fun convertSecondary(
     currentResult: HkoCurrentResult?,
     normalsResult: HkoNormalsResult?,
     oneJsonResult: HkoOneJsonResult?,
-    warningDetailsResult: MutableMap<String, HkoWarningResult>?
+    warningDetailsResult: MutableMap<String, HkoWarningResult>?,
 ): SecondaryWeatherWrapper {
     return SecondaryWeatherWrapper(
         current = if (currentResult != null && oneJsonResult !== null) {
             getCurrent(context, currentResult.RegionalWeather, oneJsonResult)
-        } else null,
+        } else {
+            null
+        },
         normals = if (normalsResult !== null) {
             getNormals(normalsResult)
-        } else null,
+        } else {
+            null
+        },
         alertList = if (warningDetailsResult !== null) {
             getAlertList(context, warningDetailsResult)
-        } else null
+        } else {
+            null
+        }
     )
 }
 
 private fun getCurrent(
     context: Context,
     regionalWeather: HkoCurrentRegionalWeather?,
-    oneJson: HkoOneJsonResult
+    oneJson: HkoOneJsonResult,
 ): Current {
     return Current(
         weatherText = getWeatherText(context, oneJson.FLW?.Icon1?.toIntOrNull()),
@@ -137,7 +143,7 @@ private fun getCurrent(
 }
 
 private fun getNormals(
-    normalsResult: HkoNormalsResult
+    normalsResult: HkoNormalsResult,
 ): Normals {
     val now = Calendar.getInstance(TimeZone.getTimeZone("Asia/Hong_Kong"), Locale.ENGLISH)
     val maxTemps = mutableListOf<Double>()
@@ -169,10 +175,14 @@ private fun getNormals(
         month = month,
         daytimeTemperature = if (maxTemps.isNotEmpty()) {
             maxTemps.average()
-        } else null,
+        } else {
+            null
+        },
         nighttimeTemperature = if (minTemps.isNotEmpty()) {
             minTemps.average()
-        } else null
+        } else {
+            null
+        }
     )
 }
 
@@ -183,7 +193,7 @@ private fun getDailyForecast(
     sun2: HkoAstroResult,
     moon1: HkoAstroResult,
     moon2: HkoAstroResult,
-    oneJson: HkoOneJsonResult
+    oneJson: HkoOneJsonResult,
 ): List<Daily> {
     val formatter = SimpleDateFormat("yyyyMMdd", Locale.ENGLISH)
     formatter.timeZone = TimeZone.getTimeZone("Asia/Hong_Kong")
@@ -248,7 +258,7 @@ private fun getDailyForecast(
 private fun getHourlyForecast(
     context: Context,
     hourlyWeatherForecast: List<HkoHourlyWeatherForecast>?,
-    oneJson: HkoOneJsonResult
+    oneJson: HkoOneJsonResult,
 ): List<HourlyWrapper> {
     val formatter = SimpleDateFormat("yyyyMMddHH", Locale.ENGLISH)
     formatter.timeZone = TimeZone.getTimeZone("Asia/Hong_Kong")
@@ -311,7 +321,7 @@ private fun getHourlyForecast(
 
 private fun getAlertList(
     context: Context,
-    warningMap: MutableMap<String, HkoWarningResult>
+    warningMap: MutableMap<String, HkoWarningResult>,
 ): List<Alert> {
     val languageKey: String
     val source: String
@@ -663,7 +673,7 @@ private fun getAlertList(
 private fun formatWarningText(
     context: Context,
     warning: Map<String, Map<String, String>>?,
-    stringKeys: List<String>
+    stringKeys: List<String>,
 ): String {
     val languageKey = if (context.currentLocale.code.startsWith("zh")) {
         "Val_Chi"
@@ -679,7 +689,7 @@ private fun formatWarningText(
 // Source: https://www.hko.gov.hk/textonly/v2/explain/wxicon_e.htm
 private fun getWeatherText(
     context: Context,
-    icon: Int?
+    icon: Int?,
 ): String? {
     return when (icon) {
         50 -> context.getString(R.string.hko_weather_text_sunny) // Sunny
@@ -712,7 +722,7 @@ private fun getWeatherText(
 
 // Source: https://www.hko.gov.hk/textonly/v2/explain/wxicon_e.htm
 private fun getWeatherCode(
-    icon: Int?
+    icon: Int?,
 ): WeatherCode? {
     return when (icon) {
         50, 51, 70, 71, 72, 73, 74, 75,
@@ -738,7 +748,7 @@ private fun getWeatherCode(
 }
 
 private fun getPrecipitationProbability(
-    probability: String?
+    probability: String?,
 ): Double? {
     return when (probability) {
         "<10%" -> 10.0
@@ -787,10 +797,14 @@ private fun getAstroMap(
                     value = Astro(
                         riseDate = if (timeRegex.matches(it[1])) {
                             dateTimeFormatter.parse(it[0] + " " + it[1])
-                        } else null,
+                        } else {
+                            null
+                        },
                         setDate = if (timeRegex.matches(it[3])) {
                             dateTimeFormatter.parse(it[0] + " " + it[3])
-                        } else null
+                        } else {
+                            null
+                        }
                     )
                     astroMap[key] = value
                 }

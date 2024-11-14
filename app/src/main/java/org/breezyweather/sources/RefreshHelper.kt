@@ -102,7 +102,7 @@ import kotlin.time.Duration.Companion.minutes
 class RefreshHelper @Inject constructor(
     private val sourceManager: SourceManager,
     private val locationRepository: LocationRepository,
-    private val weatherRepository: WeatherRepository
+    private val weatherRepository: WeatherRepository,
 ) {
     suspend fun getLocation(
         context: Context, location: Location, background: Boolean
@@ -398,7 +398,9 @@ class RefreshHelper @Inject constructor(
                         locationParameters[service.id] =
                             (if (locationParameters.getOrElse(service.id) { null } != null) {
                                 locationParameters[service.id]!!
-                            } else emptyMap()) + service
+                            } else {
+                                emptyMap()
+                            }) + service
                             .requestLocationParameters(context, location.copy())
                             .awaitFirstOrElse {
                                 throw WeatherException()
@@ -508,7 +510,9 @@ class RefreshHelper @Inject constructor(
                                         locationParameters[secondaryService.id] =
                                             (if (locationParameters.getOrElse(secondaryService.id) { null } != null) {
                                                 locationParameters[secondaryService.id]!!
-                                            } else emptyMap()) + secondaryService
+                                            } else {
+                                                emptyMap()
+                                            }) + secondaryService
                                             .requestLocationParameters(context, location.copy())
                                             .awaitFirstOrElse {
                                                 throw WeatherException()
@@ -550,39 +554,53 @@ class RefreshHelper @Inject constructor(
                             currentUpdateTime = Date()
                             it
                         } // Don't fallback to old current, we will use forecast instead later
-                    } else null,
+                    } else {
+                        null
+                    },
                     airQuality = if (!location.airQualitySource.isNullOrEmpty() && location.airQualitySource != location.weatherSource) {
                         secondarySourceCalls.getOrElse(location.airQualitySource!!) { null }?.airQuality?.let {
                             airQualityUpdateTime = Date()
                             it
                         } ?: getAirQualityWrapperFromWeather(location.weather, yesterdayMidnight)
-                    } else null,
+                    } else {
+                        null
+                    },
                     pollen = if (!location.pollenSource.isNullOrEmpty() && location.pollenSource != location.weatherSource) {
                         secondarySourceCalls.getOrElse(location.pollenSource!!) { null }?.pollen?.let {
                             pollenUpdateTime = Date()
                             it
                         } ?: getPollenWrapperFromWeather(location.weather, yesterdayMidnight)
-                    } else null,
+                    } else {
+                        null
+                    },
                     minutelyForecast = if (!location.minutelySource.isNullOrEmpty() && location.minutelySource != location.weatherSource) {
                         secondarySourceCalls.getOrElse(location.minutelySource!!) { null }?.minutelyForecast?.let {
                             minutelyUpdateTime = Date()
                             it
                         } ?: getMinutelyFromWeather(location.weather)
-                    } else null,
+                    } else {
+                        null
+                    },
                     alertList = if (!location.alertSource.isNullOrEmpty() && location.alertSource != location.weatherSource) {
                         secondarySourceCalls.getOrElse(location.alertSource!!) { null }?.alertList?.let {
                             alertsUpdateTime = Date()
                             it
                         } ?: getAlertsFromWeather(location.weather)
-                    } else null,
+                    } else {
+                        null
+                    },
                     normals = if (!location.normalsSource.isNullOrEmpty() && location.normalsSource != location.weatherSource) {
                         secondarySourceCalls.getOrElse(location.normalsSource!!) { null }?.normals?.let {
                             normalsUpdateTime = Date()
                             it
                         } ?: getNormalsFromWeather(location)
-                    } else null
+                    } else {
+                        null
+                    }
                 )
-            } else null
+            } else {
+                null
+            }
 
             /**
              * Most sources starts hourly forecast at current time (13:00 for example)
@@ -691,7 +709,8 @@ class RefreshHelper @Inject constructor(
             is InvalidLocationException -> RefreshErrorType.INVALID_LOCATION
             is LocationException -> RefreshErrorType.LOCATION_FAILED
             is MissingPermissionLocationException -> RefreshErrorType.ACCESS_LOCATION_PERMISSION_MISSING
-            is MissingPermissionLocationBackgroundException -> RefreshErrorType.ACCESS_BACKGROUND_LOCATION_PERMISSION_MISSING
+            is MissingPermissionLocationBackgroundException
+            -> RefreshErrorType.ACCESS_BACKGROUND_LOCATION_PERMISSION_MISSING
             is ReverseGeocodingException -> RefreshErrorType.REVERSE_GEOCODING_FAILED
             is SecondaryWeatherException -> RefreshErrorType.SECONDARY_WEATHER_FAILED
             is MissingFieldException, is SerializationException, is ParsingException,
@@ -868,9 +887,7 @@ class RefreshHelper @Inject constructor(
             .forEach { source ->
                 val config = SourceConfigStore(context, source.id)
                 val enabledPackages = (config.getString("packages", null) ?: "").let {
-                    if (it.isNotEmpty()) {
-                        it.split(",")
-                    } else emptyList()
+                    if (it.isNotEmpty()) it.split(",") else emptyList()
                 }
 
                 if (enabledPackages.isNotEmpty()) {

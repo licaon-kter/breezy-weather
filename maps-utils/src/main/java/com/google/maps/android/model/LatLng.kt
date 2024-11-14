@@ -6,7 +6,7 @@ import kotlin.math.min
 
 class LatLng(
     latitude: Double,
-    longitude: Double
+    longitude: Double,
 ) {
     val latitude: Double
     val longitude: Double

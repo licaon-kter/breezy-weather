@@ -61,7 +61,7 @@ fun convert(
     moonResult: MetNoMoonResult,
     nowcastResult: MetNoNowcastResult,
     airQualityResult: MetNoAirQualityResult,
-    metNoAlerts: MetNoAlertResult
+    metNoAlerts: MetNoAlertResult,
 ): WeatherWrapper {
     // If the API doesn’t return hourly, consider data as garbage and keep cached data
     if (forecastResult.properties == null ||
@@ -100,22 +100,28 @@ fun getCurrent(nowcastResult: MetNoNowcastResult, context: Context): Current? {
             temperature = Temperature(
                 temperature = currentTimeseries.instant?.details?.airTemperature,
             ),
-            wind = if (currentTimeseries.instant?.details != null) Wind(
-                degree = currentTimeseries.instant.details.windFromDirection,
-                speed = currentTimeseries.instant.details.windSpeed
-            ) else null,
+            wind = if (currentTimeseries.instant?.details != null) {
+                Wind(
+                    degree = currentTimeseries.instant.details.windFromDirection,
+                    speed = currentTimeseries.instant.details.windSpeed
+                )
+            } else {
+                null
+            },
             relativeHumidity = currentTimeseries.instant?.details?.relativeHumidity,
             dewPoint = currentTimeseries.instant?.details?.dewPointTemperature,
             pressure = currentTimeseries.instant?.details?.airPressureAtSeaLevel,
             cloudCover = currentTimeseries.instant?.details?.cloudAreaFraction?.roundToInt()
         )
-    } else null
+    } else {
+        null
+    }
 }
 
 private fun getHourlyList(
     context: Context,
     forecastTimeseries: List<MetNoForecastTimeseries>,
-    airQualityResult: MetNoAirQualityResult
+    airQualityResult: MetNoAirQualityResult,
 ): List<HourlyWrapper> {
     return forecastTimeseries.map { hourlyForecast ->
         val airQualityDataResult = airQualityResult.data?.time?.firstOrNull { it.from.time == hourlyForecast.time.time }
@@ -143,14 +149,18 @@ private fun getHourlyList(
             wind = if (hourlyForecast.data?.instant?.details != null) Wind(
                 degree = hourlyForecast.data.instant.details.windFromDirection,
                 speed = hourlyForecast.data.instant.details.windSpeed
-            ) else null,
+            ) else {
+                null
+            },
             airQuality = if (airQualityDataResult != null) AirQuality(
                 pM25 = airQualityDataResult.variables?.pm25Concentration?.value,
                 pM10 = airQualityDataResult.variables?.pm10Concentration?.value,
                 sO2 = airQualityDataResult.variables?.so2Concentration?.value,
                 nO2 = airQualityDataResult.variables?.no2Concentration?.value,
                 o3 = airQualityDataResult.variables?.o3Concentration?.value
-            ) else null,
+            ) else {
+                null
+            },
             uV = UV(index = hourlyForecast.data?.instant?.details?.ultravioletIndexClearSky),
             relativeHumidity = hourlyForecast.data?.instant?.details?.relativeHumidity,
             dewPoint = hourlyForecast.data?.instant?.details?.dewPointTemperature,
@@ -164,7 +174,7 @@ private fun getDailyList(
     location: Location,
     sunResult: MetNoSunProperties?,
     moonResult: MetNoMoonProperties?,
-    forecastTimeseries: List<MetNoForecastTimeseries>
+    forecastTimeseries: List<MetNoForecastTimeseries>,
 ): List<Daily> {
     val dailyList = mutableListOf<Daily>()
     val hourlyListByDay = forecastTimeseries.groupBy {
@@ -176,17 +186,29 @@ private fun getDailyList(
             dailyList.add(
                 Daily(
                     date = dayDate,
-                    sun = if (i == 0) Astro(
-                        riseDate = sunResult?.sunrise?.time,
-                        setDate = sunResult?.sunset?.time,
-                    ) else null,
-                    moon = if (i == 0) Astro(
-                        riseDate = moonResult?.moonrise?.time,
-                        setDate = moonResult?.moonset?.time,
-                    ) else null,
-                    moonPhase = if (i == 0) MoonPhase(
-                        angle = moonResult?.moonphase?.roundToInt()
-                    ) else null
+                    sun = if (i == 0) {
+                        Astro(
+                            riseDate = sunResult?.sunrise?.time,
+                            setDate = sunResult?.sunset?.time,
+                        )
+                    } else {
+                        null
+                    },
+                    moon = if (i == 0) {
+                        Astro(
+                            riseDate = moonResult?.moonrise?.time,
+                            setDate = moonResult?.moonset?.time,
+                        )
+                    } else {
+                        null
+                    },
+                    moonPhase = if (i == 0) {
+                        MoonPhase(
+                            angle = moonResult?.moonphase?.roundToInt()
+                        )
+                    } else {
+                        null
+                    }
                 )
             )
         }
@@ -302,7 +324,7 @@ fun convertSecondary(
     nowcastResult: MetNoNowcastResult?,
     airQualityResult: MetNoAirQualityResult?,
     metNoAlertResults: MetNoAlertResult?,
-    context: Context
+    context: Context,
 ): SecondaryWeatherWrapper {
     val airQualityHourly: MutableMap<Date, AirQuality> = mutableMapOf()
 
@@ -319,15 +341,23 @@ fun convertSecondary(
     return SecondaryWeatherWrapper(
         current = if (nowcastResult != null) {
             getCurrent(nowcastResult, context)
-        } else null,
+        } else {
+            null
+        },
         airQuality = if (airQualityResult != null) {
             AirQualityWrapper(hourlyForecast = airQualityHourly)
-        } else null,
+        } else {
+            null
+        },
         minutelyForecast = if (nowcastResult != null) {
             getMinutelyList(nowcastResult.properties?.timeseries)
-        } else null,
+        } else {
+            null
+        },
         alertList = if (metNoAlertResults != null) {
             getAlerts(metNoAlertResults)
-        } else null
+        } else {
+            null
+        }
     )
 }

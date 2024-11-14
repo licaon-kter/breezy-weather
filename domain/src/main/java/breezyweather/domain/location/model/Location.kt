@@ -73,7 +73,7 @@ data class Location(
      * "nws": {"gridId": "8", "gridX": "20", "gridY": "30"}
      * etc
      */
-    val parameters: Map<String, Map<String, String>> = emptyMap()
+    val parameters: Map<String, Map<String, String>> = emptyMap(),
 ) : Parcelable {
 
     val javaTimeZone: java.util.TimeZone = java.util.TimeZone.getTimeZone(timeZone)

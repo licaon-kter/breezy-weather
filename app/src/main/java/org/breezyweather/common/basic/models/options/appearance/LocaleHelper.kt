@@ -38,7 +38,13 @@ object LocaleHelper {
                         val langTag = parser.getAttributeValue(i)
                         val displayName = getLocalizedDisplayName(langTag)
                         if (displayName.isNotEmpty()) {
-                            langs.add(Language(langTag, displayName/*, getDisplayName(langTag)*/))
+                            langs.add(
+                                Language(
+                                    langTag,
+                                    displayName/*,
+                                    getDisplayName(langTag)*/
+                                )
+                            )
                         }
                     }
                 }

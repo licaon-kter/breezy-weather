@@ -42,7 +42,7 @@ class Pollen(
     val sorrel: Int? = null,
     val tree: Int? = null,
     val urticaceae: Int? = null,
-    val willow: Int? = null
+    val willow: Int? = null,
 ) : Serializable {
 
     val isMoldValid: Boolean

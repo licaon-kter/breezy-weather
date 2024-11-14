@@ -34,7 +34,9 @@ import org.breezyweather.common.extensions.getTypefaceFromTextAppearance
  * Trend linear layout.
  */
 class TrendLinearLayout @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null, defStyle: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0,
 ) : LinearLayout(context, attrs, defStyle) {
     private val mPaint = Paint().apply {
         isAntiAlias = true
@@ -175,7 +177,9 @@ class TrendLinearLayout @JvmOverloads constructor(
                 computeSingleCoordinate(mHistoryTemps[0], mHighestTemp!!, mLowestTemp!!),
                 computeSingleCoordinate(mHistoryTemps[1], mHighestTemp!!, mLowestTemp!!)
             )
-        } else emptyArray()
+        } else {
+            emptyArray()
+        }
     }
 
     private fun computeSingleCoordinate(value: Float, max: Float, min: Float): Float {

@@ -47,13 +47,15 @@ import javax.inject.Inject
 class SearchActivityRepository @Inject internal constructor(
     @ApplicationContext context: Context,
     private val mRefreshHelper: RefreshHelper,
-    private val mCompositeDisposable: CompositeDisposable
+    private val mCompositeDisposable: CompositeDisposable,
 ) {
     private val mConfig: ConfigStore = ConfigStore(context, PREFERENCE_SEARCH_CONFIG)
 
     fun searchLocationList(
-        context: Context, query: String, locationSearchSource: String,
-        callback: (t: Pair<List<Location>?, RefreshErrorType?>?, done: Boolean) -> Unit
+        context: Context,
+        query: String,
+        locationSearchSource: String,
+        callback: (t: Pair<List<Location>?, RefreshErrorType?>?, done: Boolean) -> Unit,
     ) {
         mRefreshHelper
             .requestSearchLocations(context, query, locationSearchSource)

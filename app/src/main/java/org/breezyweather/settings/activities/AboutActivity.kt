@@ -566,12 +566,12 @@ class AboutActivity : GeoActivity() {
             Text(
                 text = stringResource(R.string.breezy_weather),
                 color = DayNightTheme.colors.titleColor,
-                style = MaterialTheme.typography.headlineSmall,
+                style = MaterialTheme.typography.headlineSmall
             )
             Text(
                 text = versionFormatted,
                 color = DayNightTheme.colors.captionColor,
-                style = MaterialTheme.typography.labelMedium,
+                style = MaterialTheme.typography.labelMedium
             )
         }
     }
@@ -582,7 +582,7 @@ class AboutActivity : GeoActivity() {
             text = title,
             modifier = Modifier.padding(dimensionResource(R.dimen.normal_margin)),
             color = DayNightTheme.colors.captionColor,
-            style = MaterialTheme.typography.labelMedium,
+            style = MaterialTheme.typography.labelMedium
         )
     }
 
@@ -619,7 +619,7 @@ class AboutActivity : GeoActivity() {
                 Text(
                     text = title,
                     color = DayNightTheme.colors.titleColor,
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.titleMedium
                 )
             }
         }
@@ -648,13 +648,13 @@ class AboutActivity : GeoActivity() {
                     Text(
                         text = name,
                         color = DayNightTheme.colors.titleColor,
-                        style = MaterialTheme.typography.titleMedium,
+                        style = MaterialTheme.typography.titleMedium
                     )
                 }
                 if (contribution != null) {
                     Text(
                         text = stringResource(contribution),
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
             }

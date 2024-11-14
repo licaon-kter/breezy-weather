@@ -2,7 +2,7 @@ package com.google.maps.android.model
 
 data class LatLngBounds(
     val southwest: LatLng,
-    val northeast: LatLng
+    val northeast: LatLng,
 ) {
 
     fun contains(point: LatLng): Boolean {

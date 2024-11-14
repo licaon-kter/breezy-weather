@@ -28,7 +28,9 @@ import org.json.JSONObject
  * array of
  * GeoJsonFeature objects parsed from the GeoJSON file.
  */
-class GeoJsonParser(private val mGeoJsonFile: JSONObject) {
+class GeoJsonParser(
+    private val mGeoJsonFile: JSONObject,
+) {
     /**
      * Gets the array of GeoJsonFeature objects
      *

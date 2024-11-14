@@ -64,7 +64,7 @@ import javax.inject.Named
 
 class AccuService @Inject constructor(
     @ApplicationContext context: Context,
-    @Named("JsonClient") client: Retrofit.Builder
+    @Named("JsonClient") client: Retrofit.Builder,
 ) : HttpSource(), MainWeatherSource, SecondaryWeatherSource,
     LocationSearchSource, ReverseGeocodingSource,
     ConfigurableSource, LocationParametersSource {
@@ -100,7 +100,9 @@ class AccuService @Inject constructor(
     )
 
     override fun requestWeather(
-        context: Context, location: Location, ignoreFeatures: List<SecondaryWeatherSourceFeature>
+        context: Context,
+        location: Location,
+        ignoreFeatures: List<SecondaryWeatherSourceFeature>,
     ): Observable<WeatherWrapper> {
         if (!isConfigured) {
             return Observable.error(ApiKeyMissingException())
@@ -247,13 +249,14 @@ class AccuService @Inject constructor(
             alert,
             airQuality,
             climoSummary
-        ) { accuRealtimeResults: List<AccuCurrentResult>,
-            accuDailyResult: AccuForecastDailyResult,
-            accuHourlyResults: List<AccuForecastHourlyResult>,
-            accuMinutelyResult: AccuMinutelyResult,
-            accuAlertResults: List<AccuAlertResult>,
-            accuAirQualityResult: AccuAirQualityResult,
-            accuClimoResult: AccuClimoSummaryResult
+        ) {
+                accuRealtimeResults: List<AccuCurrentResult>,
+                accuDailyResult: AccuForecastDailyResult,
+                accuHourlyResults: List<AccuForecastHourlyResult>,
+                accuMinutelyResult: AccuMinutelyResult,
+                accuAlertResults: List<AccuAlertResult>,
+                accuAirQualityResult: AccuAirQualityResult,
+                accuClimoResult: AccuClimoSummaryResult
             ->
             convert(
                 location,
@@ -280,7 +283,7 @@ class AccuService @Inject constructor(
     )
     override fun isFeatureSupportedInSecondaryForLocation(
         location: Location,
-        feature: SecondaryWeatherSourceFeature
+        feature: SecondaryWeatherSourceFeature,
     ): Boolean {
         return (isConfigured && (portal == AccuPortalPreference.ENTERPRISE ||
                 feature == SecondaryWeatherSourceFeature.FEATURE_CURRENT ||
@@ -295,7 +298,7 @@ class AccuService @Inject constructor(
 
     override fun requestSecondaryWeather(
         context: Context, location: Location,
-        requestedFeatures: List<SecondaryWeatherSourceFeature>
+        requestedFeatures: List<SecondaryWeatherSourceFeature>,
     ): Observable<SecondaryWeatherWrapper> {
         if (!isConfigured) {
             return Observable.error(ApiKeyMissingException())
@@ -441,31 +444,42 @@ class AccuService @Inject constructor(
             minute,
             alert,
             climoSummary
-        ) { accuRealtimeResults: List<AccuCurrentResult>,
-            accuAirQualityResult: AccuAirQualityResult,
-            accuDailyPollenResult: AccuForecastDailyResult,
-            accuMinutelyResult: AccuMinutelyResult,
-            accuAlertResults: List<AccuAlertResult>,
-            accuClimoResult: AccuClimoSummaryResult
+        ) {
+                accuRealtimeResults: List<AccuCurrentResult>,
+                accuAirQualityResult: AccuAirQualityResult,
+                accuDailyPollenResult: AccuForecastDailyResult,
+                accuMinutelyResult: AccuMinutelyResult,
+                accuAlertResults: List<AccuAlertResult>,
+                accuClimoResult: AccuClimoSummaryResult
             ->
             convertSecondary(
                 location,
                 accuRealtimeResults.getOrNull(0),
                 if (requestedFeatures.contains(SecondaryWeatherSourceFeature.FEATURE_AIR_QUALITY)) {
                     accuAirQualityResult
-                } else null,
+                } else {
+                    null
+                },
                 if (requestedFeatures.contains(SecondaryWeatherSourceFeature.FEATURE_POLLEN)) {
                     accuDailyPollenResult
-                } else null,
+                } else {
+                    null
+                },
                 if (requestedFeatures.contains(SecondaryWeatherSourceFeature.FEATURE_MINUTELY)) {
                     accuMinutelyResult
-                } else null,
+                } else {
+                    null
+                },
                 if (requestedFeatures.contains(SecondaryWeatherSourceFeature.FEATURE_ALERT)) {
                     accuAlertResults
-                } else null,
+                } else {
+                    null
+                },
                 if (requestedFeatures.contains(SecondaryWeatherSourceFeature.FEATURE_NORMALS)) {
                     accuClimoResult
-                } else null,
+                } else {
+                    null
+                },
                 cal[Calendar.MONTH]
             )
         }
@@ -473,7 +487,7 @@ class AccuService @Inject constructor(
 
     override fun requestLocationSearch(
         context: Context,
-        query: String
+        query: String,
     ): Observable<List<Location>> {
         if (!isConfigured) {
             return Observable.error(ApiKeyMissingException())
@@ -502,7 +516,7 @@ class AccuService @Inject constructor(
 
     override fun requestReverseGeocodingLocation(
         context: Context,
-        location: Location
+        location: Location,
     ): Observable<List<Location>> {
         if (!isConfigured) {
             return Observable.error(ApiKeyMissingException())
@@ -586,7 +600,7 @@ class AccuService @Inject constructor(
                 nameArrayId = R.array.accu_preference_portal,
                 onValueChanged = {
                     portal = AccuPortalPreference.getInstance(it)
-                },
+                }
             ),
             EditTextPreference(
                 titleId = R.string.settings_weather_source_accu_api_key,
@@ -607,7 +621,7 @@ class AccuService @Inject constructor(
                 nameArrayId = R.array.accu_preference_days,
                 onValueChanged = {
                     days = AccuDaysPreference.getInstance(it)
-                },
+                }
             ),
             ListPreference(
                 titleId = R.string.setting_weather_source_accu_hours,
@@ -616,7 +630,7 @@ class AccuService @Inject constructor(
                 nameArrayId = R.array.accu_preference_hours,
                 onValueChanged = {
                     hours = AccuHoursPreference.getInstance(it)
-                },
+                }
             )
         )
     }
@@ -625,22 +639,26 @@ class AccuService @Inject constructor(
     override fun needsLocationParametersRefresh(
         location: Location,
         coordinatesChanged: Boolean,
-        features: List<SecondaryWeatherSourceFeature>
+        features: List<SecondaryWeatherSourceFeature>,
     ): Boolean {
         if (coordinatesChanged) return true
 
         return if (features.isEmpty() ||
             features.contains(SecondaryWeatherSourceFeature.FEATURE_AIR_QUALITY) ||
             features.contains(SecondaryWeatherSourceFeature.FEATURE_POLLEN) ||
-            features.contains(SecondaryWeatherSourceFeature.FEATURE_NORMALS)) {
+            features.contains(SecondaryWeatherSourceFeature.FEATURE_NORMALS)
+        ) {
             val currentLocationKey = location.parameters
                 .getOrElse(id) { null }?.getOrElse("locationKey") { null }
             currentLocationKey.isNullOrEmpty()
-        } else false // If we request alerts or minutely, we don't need locationKey
+        } else {
+            false
+        } // If we request alerts or minutely, we don't need locationKey
     }
 
     override fun requestLocationParameters(
-        context: Context, location: Location
+        context: Context,
+        location: Location,
     ): Observable<Map<String, String>> {
         if (!isConfigured) {
             return Observable.error(ApiKeyMissingException())
@@ -652,7 +670,9 @@ class AccuService @Inject constructor(
             context.currentLocale.code
         } else if (context.currentLocale.code.startsWith("iw")) {
             "he"
-        } else "en"
+        } else {
+            "en"
+        }
         val mApi = if (portal == AccuPortalPreference.ENTERPRISE) mEnterpriseApi else mDeveloperApi
         return mApi.getWeatherLocationByGeoPosition(
             apiKey,

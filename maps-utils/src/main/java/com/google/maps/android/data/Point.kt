@@ -23,7 +23,9 @@ import com.google.maps.android.model.LatLng
  * [KmlPoint] and
  * [GeoJsonPoint]
  */
-open class Point(coordinates: LatLng) : Geometry<Any> {
+open class Point(
+    coordinates: LatLng,
+) : Geometry<Any> {
     private val mCoordinates: LatLng
 
     /**

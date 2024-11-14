@@ -24,14 +24,14 @@ sealed class PreferenceToken {
         get() = ""
 
     class SectionHeader(
-        @StringRes val sectionTitleId: Int
+        @StringRes val sectionTitleId: Int,
     ): PreferenceToken() {
         override val preferenceKey: String
             get() = "header_$sectionTitleId"
     }
 
     class SectionFooter(
-        @StringRes val sectionTitleId: Int
+        @StringRes val sectionTitleId: Int,
     ): PreferenceToken() {
         override val preferenceKey: String
             get() = "footer_$sectionTitleId"
@@ -52,7 +52,7 @@ sealed class PreferenceToken {
     }
 
     class ClickablePreference(
-        @StringRes val titleId: Int
+        @StringRes val titleId: Int,
     ): PreferenceToken() {
         override val preferenceKey: String
             get() = "pref_$titleId"

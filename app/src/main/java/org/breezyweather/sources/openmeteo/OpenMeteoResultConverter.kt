@@ -58,7 +58,7 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
 fun convert(
-    result: OpenMeteoLocationResult
+    result: OpenMeteoLocationResult,
 ): Location? {
     if (result.timezone == null) {
         return null
@@ -75,7 +75,9 @@ fun convert(
         // Province code is mandatory for MF source to have alerts/air quality, and MF source uses Open-Meteo search
         admin2Code = if (result.countryCode.equals("FR", ignoreCase = true)) {
             getFrenchDepartmentCode(result.admin2 ?: "")
-        } else null,
+        } else {
+            null
+        },
         admin3 = result.admin3,
         admin4 = result.admin4,
         city = result.name,
@@ -87,7 +89,7 @@ fun convert(
     context: Context,
     location: Location,
     weatherResult: OpenMeteoWeatherResult,
-    airQualityResult: OpenMeteoAirQualityResult
+    airQualityResult: OpenMeteoAirQualityResult,
 ): WeatherWrapper {
     // If the API doesn’t return hourly or daily, consider data as garbage and keep cached data
     if (weatherResult.hourly == null || weatherResult.daily == null) {
@@ -102,7 +104,10 @@ fun convert(
     )
 }
 
-fun getCurrent(current: OpenMeteoWeatherCurrent?, context: Context): Current? {
+fun getCurrent(
+    current: OpenMeteoWeatherCurrent?,
+    context: Context,
+): Current? {
     if (current == null) return null
 
     return Current(
@@ -128,7 +133,7 @@ fun getCurrent(current: OpenMeteoWeatherCurrent?, context: Context): Current? {
 
 private fun getDailyList(
     dailyResult: OpenMeteoWeatherDaily,
-    location: Location
+    location: Location,
 ): List<Daily> {
     val dailyList: MutableList<Daily> = ArrayList(dailyResult.time.size - 1)
     for (i in 0 until dailyResult.time.size - 1) {
@@ -168,7 +173,7 @@ private fun getDailyList(
 private fun getHourlyList(
     context: Context,
     hourlyResult: OpenMeteoWeatherHourly,
-    airQualityResult: OpenMeteoAirQualityResult
+    airQualityResult: OpenMeteoAirQualityResult,
 ): List<HourlyWrapper> {
     val hourlyList = mutableListOf<HourlyWrapper>()
     for (i in hourlyResult.time.indices) {
@@ -197,22 +202,30 @@ private fun getHourlyList(
                     speed = hourlyResult.windSpeed?.getOrNull(i),
                     gusts = hourlyResult.windGusts?.getOrNull(i)
                 ),
-                airQuality = if (airQualityIndex != null && airQualityIndex != -1) AirQuality(
-                    pM25 = airQualityResult.hourly.pm25?.getOrNull(airQualityIndex),
-                    pM10 = airQualityResult.hourly.pm10?.getOrNull(airQualityIndex),
-                    sO2 = airQualityResult.hourly.sulphurDioxide?.getOrNull(airQualityIndex),
-                    nO2 = airQualityResult.hourly.nitrogenDioxide?.getOrNull(airQualityIndex),
-                    o3 = airQualityResult.hourly.ozone?.getOrNull(airQualityIndex),
-                    cO = airQualityResult.hourly.carbonMonoxide?.getOrNull(airQualityIndex)?.div(1000.0)
-                ) else null,
-                pollen = if (airQualityIndex != null && airQualityIndex != -1) Pollen(
-                    alder = airQualityResult.hourly.alderPollen?.getOrNull(airQualityIndex)?.roundToInt(),
-                    birch = airQualityResult.hourly.birchPollen?.getOrNull(airQualityIndex)?.roundToInt(),
-                    grass = airQualityResult.hourly.grassPollen?.getOrNull(airQualityIndex)?.roundToInt(),
-                    mugwort = airQualityResult.hourly.mugwortPollen?.getOrNull(airQualityIndex)?.roundToInt(),
-                    olive = airQualityResult.hourly.olivePollen?.getOrNull(airQualityIndex)?.roundToInt(),
-                    ragweed = airQualityResult.hourly.ragweedPollen?.getOrNull(airQualityIndex)?.roundToInt()
-                ) else null,
+                airQuality = if (airQualityIndex != null && airQualityIndex != -1) {
+                    AirQuality(
+                        pM25 = airQualityResult.hourly.pm25?.getOrNull(airQualityIndex),
+                        pM10 = airQualityResult.hourly.pm10?.getOrNull(airQualityIndex),
+                        sO2 = airQualityResult.hourly.sulphurDioxide?.getOrNull(airQualityIndex),
+                        nO2 = airQualityResult.hourly.nitrogenDioxide?.getOrNull(airQualityIndex),
+                        o3 = airQualityResult.hourly.ozone?.getOrNull(airQualityIndex),
+                        cO = airQualityResult.hourly.carbonMonoxide?.getOrNull(airQualityIndex)?.div(1000.0)
+                    )
+                } else {
+                    null
+                },
+                pollen = if (airQualityIndex != null && airQualityIndex != -1) {
+                    Pollen(
+                        alder = airQualityResult.hourly.alderPollen?.getOrNull(airQualityIndex)?.roundToInt(),
+                        birch = airQualityResult.hourly.birchPollen?.getOrNull(airQualityIndex)?.roundToInt(),
+                        grass = airQualityResult.hourly.grassPollen?.getOrNull(airQualityIndex)?.roundToInt(),
+                        mugwort = airQualityResult.hourly.mugwortPollen?.getOrNull(airQualityIndex)?.roundToInt(),
+                        olive = airQualityResult.hourly.olivePollen?.getOrNull(airQualityIndex)?.roundToInt(),
+                        ragweed = airQualityResult.hourly.ragweedPollen?.getOrNull(airQualityIndex)?.roundToInt()
+                    )
+                } else {
+                    null
+                },
                 uV = UV(index = hourlyResult.uvIndex?.getOrNull(i)),
                 relativeHumidity = hourlyResult.relativeHumidity?.getOrNull(i)?.toDouble(),
                 dewPoint = hourlyResult.dewPoint?.getOrNull(i),
@@ -225,7 +238,9 @@ private fun getHourlyList(
     return hourlyList
 }
 
-fun getMinutelyList(minutelyFifteen: OpenMeteoWeatherMinutely?): List<Minutely>? {
+fun getMinutelyList(
+    minutelyFifteen: OpenMeteoWeatherMinutely?,
+): List<Minutely>? {
     if (minutelyFifteen?.time == null || minutelyFifteen.time.isEmpty()) return null
 
     val currentMinutelyIndex = minutelyFifteen.time.indexOfFirst {
@@ -243,12 +258,17 @@ fun getMinutelyList(minutelyFifteen: OpenMeteoWeatherMinutely?): List<Minutely>?
                 precipitationIntensity = /*if (precipitationProbabilityMinutely?.getOrNull(i) != null &&
                     precipitationProbabilityMinutely[i]!! > 30) {*/
                     precipitationMinutely?.getOrNull(i)?.times(4) // mm/15 min -> mm/h
-                //} else null
+                /*} else {
+                    null
+                }*/
             )
         }
 }
 
-private fun getWeatherText(context: Context, icon: Int?): String? {
+private fun getWeatherText(
+    context: Context,
+    icon: Int?,
+): String? {
     return when (icon) {
         null -> null
         0 -> context.getString(R.string.openmeteo_weather_text_clear_sky)
@@ -283,7 +303,9 @@ private fun getWeatherText(context: Context, icon: Int?): String? {
     }
 }
 
-private fun getWeatherCode(icon: Int?): WeatherCode? {
+private fun getWeatherCode(
+    icon: Int?,
+): WeatherCode? {
     return when (icon) {
         null -> null
         0, 1 -> WeatherCode.CLEAR // Clear sky or Mainly clear
@@ -310,7 +332,7 @@ fun convertSecondary(
     weatherResult: OpenMeteoWeatherResult,
     hourlyAirQualityResult: OpenMeteoAirQualityHourly?,
     requestedFeatures: List<SecondaryWeatherSourceFeature>,
-    context: Context
+    context: Context,
 ): SecondaryWeatherWrapper {
     val airQualityHourly = mutableMapOf<Date, AirQuality>()
     val pollenHourly = mutableMapOf<Date, Pollen>()
@@ -344,10 +366,14 @@ fun convertSecondary(
         current = getCurrent(weatherResult.current, context),
         airQuality = if (requestedFeatures.contains(SecondaryWeatherSourceFeature.FEATURE_AIR_QUALITY)) {
             AirQualityWrapper(hourlyForecast = airQualityHourly)
-        } else null,
+        } else {
+            null
+        },
         pollen = if (requestedFeatures.contains(SecondaryWeatherSourceFeature.FEATURE_POLLEN)) {
             PollenWrapper(hourlyForecast = pollenHourly)
-        } else null,
+        } else {
+            null
+        },
         minutelyForecast = getMinutelyList(weatherResult.minutelyFifteen)
     )
 }
@@ -360,7 +386,7 @@ fun convertSecondary(
 fun debugConvert(
     context: Context,
     weatherResult: OpenMeteoWeatherResult,
-    airQualityResult: OpenMeteoAirQualityResult
+    airQualityResult: OpenMeteoAirQualityResult,
 ): WeatherWrapper {
     val dailyList = mutableListOf<Daily>()
     if (weatherResult.daily != null) {

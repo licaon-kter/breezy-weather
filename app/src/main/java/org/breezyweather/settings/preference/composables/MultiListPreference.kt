@@ -108,7 +108,7 @@ fun MultiListPreferenceView(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = themeRipple(),
                         onClick = { dialogOpenState.value = true },
-                        enabled = enabled,
+                        enabled = enabled
                     )
                     .padding(PaddingValues(vertical = 8.dp)),
                 leadingContent = if (iconId != null) {
@@ -117,10 +117,12 @@ fun MultiListPreferenceView(
                             painter = painterResource(iconId),
                             tint = DayNightTheme.colors.titleColor,
                             contentDescription = null,
-                            modifier = Modifier.size(24.dp),
+                            modifier = Modifier.size(24.dp)
                         )
                     }
-                } else null,
+                } else {
+                    null
+                },
                 headlineContent = {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -132,7 +134,7 @@ fun MultiListPreferenceView(
                             Text(
                                 text = title,
                                 color = DayNightTheme.colors.titleColor,
-                                style = MaterialTheme.typography.titleMedium,
+                                style = MaterialTheme.typography.titleMedium
                             )
                         }
                     }
@@ -143,7 +145,7 @@ fun MultiListPreferenceView(
                         Text(
                             text = currentSummary,
                             color = DayNightTheme.colors.bodyColor,
-                            style = MaterialTheme.typography.bodyMedium,
+                            style = MaterialTheme.typography.bodyMedium
                         )
                     }
                 }
@@ -159,7 +161,7 @@ fun MultiListPreferenceView(
                     interactionSource = remember { MutableInteractionSource() },
                     indication = themeRipple(),
                     onClick = { dialogOpenState.value = true },
-                    enabled = enabled,
+                    enabled = enabled
                 )
                 .padding(PaddingValues(vertical = 8.dp)),
             leadingContent = if (iconId != null) {
@@ -168,10 +170,12 @@ fun MultiListPreferenceView(
                         painter = painterResource(iconId),
                         tint = DayNightTheme.colors.titleColor,
                         contentDescription = null,
-                        modifier = Modifier.size(24.dp),
+                        modifier = Modifier.size(24.dp)
                     )
                 }
-            } else null,
+            } else {
+                null
+            },
             headlineContent = {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -183,7 +187,7 @@ fun MultiListPreferenceView(
                         Text(
                             text = title,
                             color = DayNightTheme.colors.titleColor,
-                            style = MaterialTheme.typography.titleMedium,
+                            style = MaterialTheme.typography.titleMedium
                         )
                     }
                 }
@@ -194,7 +198,7 @@ fun MultiListPreferenceView(
                     Text(
                         text = currentSummary,
                         color = DayNightTheme.colors.bodyColor,
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
             }
@@ -215,7 +219,7 @@ fun MultiListPreferenceView(
                     Text(
                         text = title,
                         color = MaterialTheme.colorScheme.onSurface,
-                        style = MaterialTheme.typography.headlineSmall,
+                        style = MaterialTheme.typography.headlineSmall
                     )
                 },
                 text = {
@@ -249,7 +253,7 @@ fun MultiListPreferenceView(
                         Text(
                             text = stringResource(R.string.action_save),
                             color = MaterialTheme.colorScheme.primary,
-                            style = MaterialTheme.typography.labelLarge,
+                            style = MaterialTheme.typography.labelLarge
                         )
                     }
                 },
@@ -266,7 +270,7 @@ fun MultiListPreferenceView(
                         Text(
                             text = stringResource(R.string.action_cancel),
                             color = MaterialTheme.colorScheme.primary,
-                            style = MaterialTheme.typography.labelLarge,
+                            style = MaterialTheme.typography.labelLarge
                         )
                     }
                 }
@@ -280,7 +284,7 @@ fun MultiListPreferenceView(
                     Text(
                         text = title,
                         color = MaterialTheme.colorScheme.onSurface,
-                        style = MaterialTheme.typography.headlineSmall,
+                        style = MaterialTheme.typography.headlineSmall
                     )
                 },
                 text = {
@@ -299,7 +303,7 @@ fun MultiListPreferenceView(
                         Text(
                             text = stringResource(R.string.action_close),
                             color = MaterialTheme.colorScheme.primary,
-                            style = MaterialTheme.typography.labelLarge,
+                            style = MaterialTheme.typography.labelLarge
                         )
                     }
                 }

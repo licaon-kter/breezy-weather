@@ -87,7 +87,8 @@ class SourceManager @Inject constructor(
         addAll(worldwideWeatherSourceList)
         addAll(nationalWeatherSourceList
             // Only one source in the freenet flavor, so no need to do that atm
-            /*.sortedWith { ws1, ws2 -> // Sort by name because there are now a lot of sources
+            /*.sortedWith { ws1, ws2 ->
+                // Sort by name because there are now a lot of sources
                 Collator.getInstance(context.currentLocale).compare(ws1.name, ws2.name)
             }*/
         )
@@ -146,7 +147,7 @@ class SourceManager @Inject constructor(
     fun getConfigurableSources(): List<ConfigurableSource> = sourceList.filterIsInstance<ConfigurableSource>()
 
     fun sourcesWithPreferencesScreen(
-        location: Location
+        location: Location,
     ): List<PreferencesParametersSource> {
         val preferencesScreenSources = mutableListOf<PreferencesParametersSource>()
 
@@ -175,7 +176,8 @@ class SourceManager @Inject constructor(
         }
 
         return preferencesScreenSources
-        /*.sortedWith { s1, s2 -> // Sort by name because there are now a lot of sources
+        /*.sortedWith { s1, s2 ->
+            // Sort by name because there are now a lot of sources
             Collator.getInstance(
                 SettingsManager.getInstance(context).language.locale
             ).compare(s1.name, s2.name)
