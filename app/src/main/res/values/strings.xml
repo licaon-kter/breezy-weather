@@ -547,6 +547,7 @@
     <string name="settings_source_instance_geocoding">Geocoding instance</string>
     <string name="settings_weather_source_bright_sky_instance" translatable="false">@string/settings_source_instance</string>
     <string name="settings_weather_source_recosante_instance" translatable="false">@string/settings_source_instance</string>
+    <string name="settings_weather_source_weatherzw_instance" translatable="false">@string/settings_source_instance</string>
     <string name="settings_weather_source_recosante_instance_geocoding" translatable="false">@string/settings_source_instance_geocoding</string>
     <!-- Synonym of instance: Server -->
     <string name="settings_weather_source_open_meteo_instance_forecast">Forecast instance</string>

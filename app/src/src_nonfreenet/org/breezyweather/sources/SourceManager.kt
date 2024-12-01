@@ -43,6 +43,7 @@ import org.breezyweather.sources.bmd.BmdService
 import org.breezyweather.sources.bmkg.BmkgService
 import org.breezyweather.sources.brightsky.BrightSkyService
 import org.breezyweather.sources.china.ChinaService
+import org.breezyweather.sources.climweb.MsdZwService
 import org.breezyweather.sources.cwa.CwaService
 import org.breezyweather.sources.dmi.DmiService
 import org.breezyweather.sources.eccc.EcccService
@@ -108,6 +109,7 @@ class SourceManager @Inject constructor(
     metOfficeService: MetOfficeService,
     mfService: MfService,
     mgmService: MgmService,
+    msdZwService: MsdZwService,
     namemService: NamemService,
     naturalEarthService: NaturalEarthService,
     nwsService: NwsService,
@@ -181,6 +183,7 @@ class SourceManager @Inject constructor(
 
     // Secondary weather sources
     private val secondaryWeatherSourceList = listOf(
+        msdZwService,
         wmoSevereWeatherService,
         atmoAuraService,
         recosanteService

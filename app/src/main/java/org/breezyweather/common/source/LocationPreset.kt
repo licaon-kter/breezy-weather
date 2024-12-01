@@ -97,6 +97,9 @@ enum class LocationPreset(
     MONGOLIA("namem", minutely = "openmeteo", alert = "accu"),
     PHILIPPINES("pagasa", airQuality = "openmeteo", minutely = "openmeteo", alert = "accu", normals = "accu"),
     TURKIYE("mgm", airQuality = "openmeteo", pollen = "openmeteo", minutely = "openmeteo"),
+
+    // Africa
+    ZIMBABWE("openmeteo", alert = "msdzw", normals = "msdzw"),
     ;
 
     companion object {
@@ -137,6 +140,9 @@ enum class LocationPreset(
                     "PH" -> PHILIPPINES
                     "TR" -> TURKIYE
 
+                    // Africa
+                    "ZW" -> ZIMBABWE
+
                     else -> DEFAULT
                 }
             } else {
@@ -144,6 +150,9 @@ enum class LocationPreset(
                     // Europe
                     "DE" -> GERMANY_FREENET
                     "FR" -> FRANCE_FREENET
+
+                    // Africa
+                    "ZW" -> ZIMBABWE
 
                     else -> DEFAULT_FREENET
                 }
